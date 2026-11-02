@@ -41,6 +41,8 @@ jobs:
           node --check store.js
           node --check catalog-core.js
           node --check cupones.js
+          node --check size-guides.js
+          node --check size-guide-ui.js
       - name: Comprobar sitio, portadas, filtros y precios
         env:
           KALO_BUILD_DIR: ${{ runner.temp }}/kalo-pages
@@ -93,7 +95,7 @@ jobs:
            const p={...panama,audience,version,season};assert(coupons.validate('PTYOFF',[line('1')],new Map([['1',p]]),prices).ok);
            const q=coupons.calculate([line('1',3)],new Map([['1',p]]),prices,['PTYOFF']);const base=Math.round(core.priceOf(p,prices)*100);assert.equal(q.totalCents,(base-Math.round(base*.15))*3);
           }
-          for(const p of [{...panama,team:'Panama City FC'},{...panama,team:'Real Madrid',original:'Panama tour jersey'},{...panama,sport:'NBA'},{...panama,category:'Accesorios',original:'Panama Scarf'},{...panama,category:'Pantalones y shorts',original:'Panama Shorts'},{...panama,category:'Conjuntos',original:'Panama kid kits'}])assert(!coupons.validate('PTYOFF',[line('1')],new Map([['1',p]]),prices).ok);
+          for(const p of [{...panama,team:'Panama City FC'},{...panama,team:'Real Madrid',original:'Panama tour jersey'},{...panama,sport:'NBA'},{...panama,category:'Accesorios',original:'Panama Scarf'},{...panama,category:'Pantalones y shorts',original:'Panama Shorts'},{...panama,category:'Conjuntos',original:'Panama training kid kits'}])assert(!coupons.validate('PTYOFF',[line('1')],new Map([['1',p]]),prices).ok);
           quote=coupons.calculate([line('1')],map,{...fixturePrices,products:{1:100}},['5DOFF']);assert.equal(quote.totalCents,9500);assert.equal(quote.orderDiscountCents,500);
           quote=coupons.calculate([line('1',3)],map,{...fixturePrices,products:{1:2}},['5DOFF']);assert.equal(quote.totalCents,100);assert.equal(quote.orderDiscountCents,500);
           quote=coupons.calculate([line('1')],map,{...fixturePrices,products:{1:2}},['5DOFF']);assert.equal(quote.totalCents,0);assert.equal(quote.orderDiscountCents,200);
@@ -109,10 +111,21 @@ jobs:
           quote=coupons.calculate([line('1')],map,{...fixturePrices,products:{1:100}},['5DOFF']);message=core.orderMessage([line('1')],map,{...fixturePrices,products:{1:100}},n=>'USD '+n.toFixed(2),quote);for(const text of ['Subtotal original: USD 100.00','Descuento 5DOFF por pedido: -USD 5.00','Total después de descuentos (sin envío): USD 95.00'])assert(message.includes(text));
           const restored=JSON.parse(JSON.stringify({bag:bag,codes:['pTyOfF']}));assert.equal(coupons.restore(restored.codes)[0],'PTYOFF');assert.equal(coupons.calculate(restored.bag,map,fixturePrices,coupons.restore(restored.codes)).totalCents,12450);
           coupons=engine(false);assert.equal(coupons.restore(['PTYOFF']).length,1);assert(coupons.validate('PTYOFF',bag,map,fixturePrices).ok);assert(coupons.validate('5DOFF',bag,map,fixturePrices).ok);assert.equal(coupons.calculate(bag,map,fixturePrices,['5DOFF']).totalCents,13000);
-          coupons=engine();const actual=data.window.KALO_CATALOG.products;const realPanama=actual.filter(p=>coupons.validate('PTYOFF',[line(p.id)],new Map([[p.id,p]]),prices).ok);const expectedActual=actual.filter(p=>p.team==='Panamá'&&p.sport==='Fútbol'&&p.category==='Camisetas'&&core.classifyProduct(p,prices).shirt);assert.deepEqual(realPanama.map(p=>p.id),expectedActual.map(p=>p.id));
+          coupons=engine();const actual=data.window.KALO_CATALOG.products;const realPanama=actual.filter(p=>coupons.validate('PTYOFF',[line(p.id)],new Map([[p.id,p]]),prices).ok);const expectedActual=actual.filter(p=>p.team==='Panamá'&&p.sport==='Fútbol'&&['Camisetas','Conjuntos'].includes(p.category)&&(core.classifyProduct(p,prices).shirt||core.classifyProduct(p,prices).jerseySet));assert.deepEqual(realPanama.map(p=>p.id),expectedActual.map(p=>p.id));
+          for(const id of ['240549524','240545667','240545624','169686195']){
+            const p=actual.find(p=>p.id===id);assert(p,id);const productMap=new Map([[id,p]]),bag=[line(id,2)];
+            assert(coupons.validate('PTYOFF',bag,productMap,prices).ok,id);
+            const q=coupons.calculate(bag,productMap,prices,['PTYOFF']);assert.equal(q.lines[0].discountCents,Math.round(core.priceOf(p,prices)*100*.15)*2,id);
+          }
+          const sizes=require(path.join(root,'size-guides.js'));
+          for(const g of Object.values(sizes.guides)){for(const row of g.rows)assert.equal(row.length,g.columns.length);if(g.source)assert(fs.existsSync(path.join(root,g.source)));}
+          assert.equal(sizes.guideId(actual.find(p=>p.id==='169686195')),'kids');
+          assert.deepEqual(sizes.sizesFor(actual.find(p=>p.id==='169686195')),['16','18','20','22','24','26','28']);
+          assert.equal(sizes.guideId({audience:'Infantil',category:'Chaquetas'}),'kidsCoat');
+          assert.equal(sizes.guideId({audience:'Adulto',category:'Chaquetas'}),'coat');
           const html=fs.readFileSync(path.join(root,'index.html'),'utf8');assert(!html.includes('PTYOFF'));assert(!html.includes('5DOFF'));assert(fs.readFileSync(path.join(root,'cupones.js'),'utf8').includes('PTYOFF'));
           for(const f of ['cupones.css','fiestas-patrias.css']){const css=fs.readFileSync(path.join(root,f),'utf8');assert.equal((css.match(/\{/g)||[]).length,(css.match(/\}/g)||[]).length);}
-          console.log(`OK: ${realPanama.length} camisetas reales de Panamá; 36 combinaciones de versión/público/temporada; ejemplo $124.50; parches excluidos; cantidades; fijo por pedido y límite cero; sin acumulación; restauración; precios pendientes; WhatsApp; motor permanente sin tema.`);
+          console.log(`OK: ${realPanama.length} prendas elegibles reales de Panamá; 36 combinaciones de versión/público/temporada; ejemplo $124.50; parches excluidos; cantidades; fijo por pedido y límite cero; sin acumulación; restauración; precios pendientes; WhatsApp; motor permanente sin tema.`);
 
           const trainingSet=actual.find(p=>p.id==='258577640'),normalSet=actual.find(p=>p.id==='258578108');
           assert(trainingSet&&normalSet);

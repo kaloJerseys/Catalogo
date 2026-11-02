@@ -57,9 +57,11 @@
 
 (function(root){
   'use strict';
-  // El cupón de temporada existe únicamente mientras se carga este archivo.
+  // Regla permanente, independiente del tema visual de Fiestas Patrias.
   const nationalNames=new Set(['panama','seleccion de panama','seleccion nacional de panama','panama national team','panama national football team']);
   root.KaloCoupons?.register({code:'PTYOFF',kind:'line-percent',value:15,eligible(product,prices){
-    return root.KaloCore.normalize(product.sport)==='futbol'&&product.category==='Camisetas'&&nationalNames.has(root.KaloCore.normalize(product.team))&&root.KaloCore.classifyProduct(product,prices).shirt;
+    if(root.KaloCore.normalize(product.sport)!=='futbol'||!['Camisetas','Conjuntos'].includes(product.category)||!nationalNames.has(root.KaloCore.normalize(product.team)))return false;
+    const type=root.KaloCore.classifyProduct(product,prices);
+    return type.shirt||type.jerseySet;
   }});
 })(typeof globalThis!=='undefined'?globalThis:this);

@@ -3,3 +3,7 @@ __pycache__/
 *.zip
 
 /_no-subir-a-github/
+
+/.catalog-updater/
+/.venv/
+/actualizar-catalogo.cmd
