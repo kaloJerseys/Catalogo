@@ -1,0 +1,73 @@
+name: Validar catálogo y publicar Kalo
+
+on:
+  push:
+    paths:
+      - 'catalog-update-ready/**'
+      - '.github/workflows/catalog-pages.yml'
+      - 'tools/catalog_package.py'
+      - 'tools/catalog_io.py'
+      - 'tools/verify_generated.cjs'
+      - 'index.html'
+      - 'store.js'
+      - 'catalog-core.js'
+      - 'styles.css'
+      - 'data/prices.js'
+      - 'cupones.js'
+      - 'cupones.css'
+      - 'fiestas-patrias.js'
+      - 'fiestas-patrias.css'
+  pull_request:
+    paths:
+      - 'catalog-update-ready/**'
+      - '.github/workflows/catalog-pages.yml'
+      - 'tools/**'
+      - 'catalog-core.js'
+      - 'cupones.js'
+      - 'cupones.css'
+      - 'fiestas-patrias.js'
+      - 'fiestas-patrias.css'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kalo-pages-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Validar manifiesto, hashes y catálogo
+        run: python3 tools/catalog_package.py verify
+      - name: Preparar el sitio completo en una carpeta independiente
+        run: python3 tools/catalog_package.py build --output "${{ runner.temp }}/kalo-pages"
+      - name: Comprobar que el catálogo y el sitio generado cargan
+        run: node tools/verify_generated.cjs "${{ runner.temp }}/kalo-pages"
+      - name: Comprobar cupones y retirada del registro temporal
+        run: node tools/verify_coupons.cjs
+      - name: Crear artefacto de Pages
+        if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ${{ runner.temp }}/kalo-pages
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    needs: validate-build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Publicar solo después de validar
+        id: deployment
+        uses: actions/deploy-pages@v4

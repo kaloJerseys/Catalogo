@@ -1,0 +1,2 @@
+# Única dependencia externa; ya usada para las portadas del catálogo.
+Pillow>=10.4,<13

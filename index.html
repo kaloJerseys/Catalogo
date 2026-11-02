@@ -9,10 +9,14 @@
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./size-guide.css">
+  <link rel="stylesheet" href="./cupones.css">
+  <link rel="stylesheet" href="./fiestas-patrias.css">
   <script defer src="./data/settings.js"></script>
   <script defer src="./data/prices.js"></script>
   <script defer src="./data/catalog.js"></script>
   <script defer src="./catalog-core.js"></script>
+  <script defer src="./cupones.js"></script>
+  <script defer src="./fiestas-patrias.js"></script>
   <script defer src="./size-guides.js"></script>
   <script defer src="./size-guide-ui.js"></script>
   <script defer src="./store.js"></script>
@@ -28,13 +32,16 @@
   </header>
   <main>
     <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-copy"><p class="eyebrow"><span class="tiny-star" aria-hidden="true">✳</span> PARA QUIENES LO VIVEN</p><h1 id="hero-title">Tu equipo.<br>Tu camiseta.<br><em>Tu estilo.</em></h1><p>La pasión se lleva puesta. Encuentra esa camiseta que habla por ti, dentro y fuera de la cancha.</p><a class="button button-dark" href="#catalogo">Encuentra la tuya <span aria-hidden="true">↗</span></a><div class="hero-footnote"><span class="mini-line"></span>Fútbol, NBA, NFL, F1 y mucho más.</div></div>
+      <div class="hero-copy"><h1 id="hero-title">Tu equipo.<br>Tu camiseta.<br><em>Tu estilo.</em></h1><p>La pasión se lleva puesta. Encuentra esa camiseta que habla por ti, dentro y fuera de la cancha.</p><a class="button button-dark" href="#catalogo">Encuentra la tuya <span aria-hidden="true">↗</span></a><div class="hero-footnote"><span class="mini-line"></span>Fútbol, NBA, NFL, F1 y mucho más.</div></div>
       <div class="hero-art" aria-label="Selección de camisetas del catálogo"><div class="pitch-lines" aria-hidden="true"></div><span class="art-label">LA PASIÓN<br>NO SE EXPLICA.</span><div class="hero-shirt hero-shirt-one"><img id="hero-one" alt="Camiseta de fútbol del catálogo" fetchpriority="high"><span>PARA LA CANCHA</span></div><div class="hero-shirt hero-shirt-two"><img id="hero-two" alt="Camiseta retro del catálogo" fetchpriority="high"><span>PARA SIEMPRE</span></div><div class="passion-stamp" aria-hidden="true">100%<small>PASIÓN</small></div><span class="art-bottom">SE LLEVA PUESTA. <span>↗</span></span></div>
     </section>
     <div class="benefits"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v10H3zM14 11h4l3 3v3h-7M5 17a2 2 0 1 0 4 0m7 0a2 2 0 1 0 4 0"/></svg>Envíos a todo Panamá</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 3-5 3 2 5 3-1v11h8V10l3 1 2-5-5-3a4 4 0 0 1-8 0Z"/></svg>Un equipo para cada pasión</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11a9 9 0 0 1-9 9 9 9 0 0 1-4-1l-5 2 1-5a9 9 0 1 1 17-5Z"/><path d="M8 10h8m-8 4h5"/></svg>Atención por WhatsApp</span></div>
     <section class="pricing-strip" aria-label="Precios generales y tallas"><details><summary>Precios generales <span>Fútbol y NBA <span aria-hidden="true">↓</span></span></summary><div id="general-price-cards" class="general-price-cards"></div><p>Algunos modelos y otras secciones tienen precios distintos. Revisa el precio de cada producto. El envío se coordina por separado.</p></details><button class="size-guide-link" data-size-guide>Guía de tallas <span aria-hidden="true">↗</span></button></section>
     <section id="catalogo" class="catalog-section" aria-labelledby="catalog-title">
-      <div class="section-heading"><div><p class="eyebrow">ELIGE TUS COLORES</p><h2 id="catalog-title">El próximo fichaje<br>de tu armario.</h2></div><p>Equipos de hoy. Clásicos de siempre.<br>Encuentra lo que va contigo.</p></div>
+      <div class="section-heading"><div><p class="eyebrow">ELIGE TUS COLORES</p>
+        <h2 id="catalog-title">Feliz mes de la patria</h2>
+        <p class="size-note">Próximo pedido: 17 de noviembre</p>
+      </div><p>Equipos de hoy. Clásicos de siempre.<br>Encuentra lo que va contigo.</p></div>
       <div class="catalog-top"><div class="sport-tabs" role="group" aria-label="Filtrar por deporte"><button class="active" data-sport="" aria-pressed="true">Todo</button><button data-sport="Fútbol" aria-pressed="false">Fútbol</button><button data-sport="NBA" aria-pressed="false">NBA</button><button data-sport="NFL" aria-pressed="false">NFL</button><button data-sport="F1" aria-pressed="false">F1</button><button data-sport="Otros deportes" aria-pressed="false">Más deportes</button></div><label class="search-box"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 5 5"/></svg><input id="search" type="search" placeholder="Equipo, jugador, año…" aria-label="Buscar en el catálogo" autocomplete="off"><kbd>/</kbd></label></div>
       <div class="filter-bar"><button type="button" id="toggle-filters" class="filter-toggle" aria-expanded="false" aria-controls="filter-panel"><span>Filtrar por</span><span id="filter-count"></span><svg class="filter-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg></button><button type="button" id="clear-active-filters" class="text-button" hidden>Limpiar todo</button></div>
       <div id="active-filter-summary" class="active-filter-summary" hidden><span class="active-filter-caption">Filtros activos:</span><div id="active-filters" class="active-filters" role="group" aria-label="Filtros activos"></div></div>

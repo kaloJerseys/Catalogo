@@ -1,0 +1,89 @@
+/* Capa reversible: todos los colores y estilos patrios se limitan a esta hoja. */
+.kalo-patrias{--patrias-red:#a82344;--patrias-blue:#1e4281;--patrias-white:#fffdf5}
+.kalo-patrias [data-kalo-patrias]{pointer-events:none;user-select:none}
+.kalo-patrias [data-kalo-patrias] :where(svg){display:block;width:100%;height:100%;overflow:visible}
+.kalo-patrias .patrias-red{fill:var(--patrias-red)}
+.kalo-patrias .patrias-blue{fill:var(--patrias-blue)}
+.kalo-patrias .patrias-white{fill:var(--patrias-white)}
+.kalo-patrias .patrias-wave-low{fill:var(--patrias-blue)}
+.kalo-patrias .patrias-wave-high{fill:var(--patrias-red)}
+.kalo-patrias .patrias-strip-wave .patrias-wave-low,.kalo-patrias .patrias-how-ribbon .patrias-wave-low{fill:var(--patrias-red)}
+.kalo-patrias .patrias-strip-wave .patrias-wave-high,.kalo-patrias .patrias-how-ribbon .patrias-wave-high{fill:var(--patrias-blue)}
+.kalo-patrias .patrias-ribbon-fold{fill:#173670}
+.kalo-patrias>.announcement{display:none}
+.kalo-patrias .patrias-strip{position:relative;display:flex;align-items:center;justify-content:center;gap:12px;height:34px;overflow:hidden;background:linear-gradient(105deg,#b5263e 0%,#a82344 23%,#51395e 47%,#1e4281 72%);color:var(--patrias-white);font:500 12px/1.4 var(--body);white-space:nowrap}
+.kalo-patrias .patrias-strip-title{font-weight:700}
+.kalo-patrias .patrias-strip-celebration{font-size:11px}
+.kalo-patrias .patrias-strip .patrias-strip-star{width:18px;height:18px;flex:0 0 18px;margin:0 8px}
+.kalo-patrias .patrias-strip .patrias-strip-wave{position:absolute;bottom:-8px;width:230px;height:55px}
+.kalo-patrias .patrias-strip-wave-left{left:-15px;transform:rotate(9deg) scaleY(-1)}
+.kalo-patrias .patrias-strip-wave-right{right:-15px;transform:rotate(-9deg) scaleX(-1) scaleY(-1)}
+.kalo-patrias .patrias-bunting-zone{height:0;position:relative;z-index:2}
+.kalo-patrias .patrias-bunting{position:absolute;top:-16px;width:155px;height:50px}
+.kalo-patrias .patrias-bunting-left{left:0}
+.kalo-patrias .patrias-bunting-right{right:0;transform:scaleX(-1)}
+.kalo-patrias .patrias-string{fill:none;stroke:#aaa198;stroke-width:1}
+.kalo-patrias .patrias-flag-white{stroke:#d9d5d0;stroke-width:.6}
+.kalo-patrias .hero{position:relative;isolation:isolate}
+.kalo-patrias .hero-copy,.kalo-patrias .hero-art{position:relative;z-index:1}
+.kalo-patrias .patrias-hero-badge{position:absolute;z-index:2;left:calc(50% - 180px);top:59px;width:190px;text-align:center;color:var(--patrias-red)}
+.kalo-patrias .patrias-hero-badge .patrias-badge-ribbon{width:100%;height:51px;filter:drop-shadow(0 2px 1px #162c4b18)}
+.kalo-patrias .patrias-badge-ribbon-text{position:absolute;left:4%;top:13px;width:85%;color:var(--patrias-white);font:700 16px/1 var(--heading);transform:rotate(-6deg)}
+.kalo-patrias .patrias-badge-title{display:block;font:600 28px/1.02 var(--heading);margin-top:3px}
+.kalo-patrias .patrias-hero-badge .patrias-badge-stars{width:80px;height:22px;margin:9px auto 0}
+.kalo-patrias .patrias-hero-city{position:absolute;left:14%;bottom:19px;width:43%;height:auto;aspect-ratio:600/162;color:#78736c;opacity:.18;z-index:0}
+.kalo-patrias .patrias-city-svg{fill:currentColor}
+.kalo-patrias .patrias-city-line{fill:none;stroke:currentColor;stroke-width:1.4}
+.kalo-patrias .patrias-hero-ribbon{position:absolute;left:calc(50% - 155px);bottom:10px;width:185px;height:48px;z-index:0}
+.kalo-patrias .patrias-art-stars{position:absolute;right:11px;top:11px;width:45px;height:30px;z-index:2}
+.kalo-patrias #catalogo .section-heading>div{position:relative}
+.kalo-patrias .patrias-catalog-detail{position:absolute;width:110px;height:74px;right:-132px;top:35px}
+.kalo-patrias .patrias-catalog-detail .patrias-catalog-stars{position:absolute;top:0;left:0;width:100px;height:30px}
+.kalo-patrias .patrias-catalog-detail .patrias-catalog-wave{position:absolute;left:0;bottom:0;width:110px;height:38px}
+.kalo-patrias .how-to{position:relative;isolation:isolate;overflow:hidden}
+.kalo-patrias .how-to>div:not([data-kalo-patrias]),.kalo-patrias .how-to>ol{position:relative;z-index:1}
+.kalo-patrias .patrias-how-ribbon{position:absolute;bottom:-6px;z-index:0;height:55px}
+.kalo-patrias .patrias-how-ribbon-left{left:-5px;width:190px;transform:scaleY(-1)}
+.kalo-patrias .patrias-how-ribbon-right{right:-5px;width:250px;transform:scale(-1)}
+.kalo-patrias .patrias-how-city{position:absolute;bottom:-1px;left:30%;width:37%;max-width:470px;aspect-ratio:600/162;color:#751e2c;opacity:.45;z-index:0}
+.kalo-patrias .patrias-bridge{fill:none;stroke:currentColor;stroke-width:2}
+.kalo-patrias .patrias-how-stars{position:absolute;right:6%;top:32%;width:47px;height:45px;z-index:0}
+.kalo-patrias footer{position:relative}
+.kalo-patrias .patrias-footer-detail{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--patrias-red) 0 37%,var(--patrias-white) 37% 62%,var(--patrias-blue) 62%)}
+.kalo-patrias .patrias-footer-detail .patrias-footer-wave{position:absolute;left:-4vw;bottom:-1px;width:110px;height:25px}
+@media(min-width:1600px){
+  .kalo-patrias .patrias-hero-badge{left:calc(50% - 206px);top:65px;width:205px}
+  .kalo-patrias .patrias-badge-ribbon-text{top:15px;font-size:17px}
+  .kalo-patrias .patrias-badge-title{font-size:31px}
+}
+@media(max-width:1200px) and (min-width:701px){
+  .kalo-patrias .hero{padding-bottom:130px}
+  .kalo-patrias .patrias-hero-badge{width:145px;left:auto;right:1%;top:auto;bottom:7px}
+  .kalo-patrias .patrias-hero-badge .patrias-badge-ribbon{height:40px}
+  .kalo-patrias .patrias-badge-ribbon-text{top:10px;font-size:13px}
+  .kalo-patrias .patrias-badge-title{font-size:23px}
+  .kalo-patrias .patrias-hero-badge .patrias-badge-stars{margin-top:5px}
+  .kalo-patrias .patrias-catalog-detail{width:90px;right:-105px}
+}
+@media(max-width:700px){
+  .kalo-patrias .patrias-strip{height:31px;gap:10px;font-size:12px}
+  .kalo-patrias .patrias-strip-celebration{display:none}
+  .kalo-patrias .patrias-strip .patrias-strip-wave{width:90px;height:31px;bottom:-6px}
+  .kalo-patrias .patrias-strip .patrias-strip-star{width:14px;height:14px;margin:0 3px}
+  .kalo-patrias .patrias-bunting{width:72px;height:24px;top:-7px}
+  .kalo-patrias .hero{padding-bottom:86px}
+  .kalo-patrias .patrias-hero-badge{width:128px;left:auto;right:1%;top:auto;bottom:5px}
+  .kalo-patrias .patrias-hero-badge .patrias-badge-ribbon{height:28px}
+  .kalo-patrias .patrias-badge-ribbon-text{font-size:11px;top:7px}
+  .kalo-patrias .patrias-badge-title{font-size:18px;margin-top:0}
+  .kalo-patrias .patrias-hero-badge .patrias-badge-stars{width:62px;height:12px;margin-top:3px}
+  .kalo-patrias .patrias-hero-city{left:0;bottom:11px;width:66%;height:63px;opacity:.14}
+  .kalo-patrias .patrias-hero-ribbon{left:22%;right:auto;bottom:3px;width:30%;max-width:104px;height:22px}
+  .kalo-patrias .patrias-art-stars{width:29px;height:20px;right:6px;top:7px}
+  .kalo-patrias .patrias-catalog-detail{display:none}
+  .kalo-patrias .patrias-how-ribbon{height:31px;bottom:-6px}
+  .kalo-patrias .patrias-how-ribbon-left{width:100px}.kalo-patrias .patrias-how-ribbon-right{width:120px}
+  .kalo-patrias .patrias-how-city{width:60%;left:20%;max-width:none;opacity:.28}
+  .kalo-patrias .patrias-how-stars{right:4%;top:auto;bottom:29px;width:30px;height:31px}
+  .kalo-patrias .patrias-footer-detail .patrias-footer-wave{width:65px;height:16px}
+}
