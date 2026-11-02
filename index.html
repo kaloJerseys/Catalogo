@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#a82d24">
   <meta name="description" content="Encuentra tu próxima camiseta en Kalo Jerseys. Fútbol, NBA, NFL, F1, retro y conjuntos. Pedidos por WhatsApp y envíos a todo Panamá.">
   <title>Kalo Jerseys · Lleva tu pasión</title>
-  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="./assets/logo-kalo.png" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./size-guide.css">
   <link rel="stylesheet" href="./cupones.css">
@@ -14,18 +14,18 @@
   <script defer src="./data/settings.js"></script>
   <script defer src="./data/prices.js"></script>
   <script defer src="./data/catalog.js"></script>
-  <script defer src="./catalog-core.js"></script>
+  <script defer src="./catalog-core.js?v=cupones-conjuntos-3"></script>
   <script defer src="./cupones.js"></script>
   <script defer src="./fiestas-patrias.js"></script>
   <script defer src="./size-guides.js"></script>
   <script defer src="./size-guide-ui.js"></script>
-  <script defer src="./store.js"></script>
+  <script defer src="./store.js?v=cupones-conjuntos-3"></script>
 </head>
 <body>
   <a class="skip-link" href="#catalogo">Ir al catálogo</a>
   <div class="announcement"><span>DE LA CANCHA A TU DÍA A DÍA</span><span>Envíos a todo Panamá <span aria-hidden="true">↗</span></span></div>
   <header class="header">
-    <a class="brand" href="./" aria-label="Kalo Jerseys, inicio"><img src="./assets/logo-kalo.jpg" alt="" width="52" height="52"><span>KALO<small>JERSEYS & SPORTSWEAR</small></span></a>
+    <a class="brand" href="./" aria-label="Kalo Jerseys, inicio"><img src="./assets/logo-kalo.png" alt="" width="52" height="52"><span>KALO<small>JERSEYS & SPORTSWEAR</small></span></a>
     <nav class="desktop-nav" aria-label="Navegación principal"><a href="#catalogo">Catálogo</a><a href="#como-pedir">Cómo pedir</a><a href="#preguntas">Preguntas</a><a href="https://www.instagram.com/kalo.jerseys/" target="_blank" rel="noopener noreferrer">Instagram <span aria-hidden="true">↗</span></a></nav>
     <details class="mobile-menu"><summary>Menú <span aria-hidden="true">☰</span></summary><nav aria-label="Navegación móvil"><a href="#catalogo">Catálogo</a><a href="#como-pedir">Cómo pedir</a><a href="#preguntas">Preguntas frecuentes</a><a href="https://www.instagram.com/kalo.jerseys/" target="_blank" rel="noopener noreferrer">Instagram ↗</a></nav></details>
     <button class="bag-button" id="open-bag" aria-label="Abrir mi pedido"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 7h14l1 14H4L5 7Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="bag-label">Mi pedido</span><span id="bag-count">0</span></button>
@@ -61,7 +61,7 @@
       <details><summary>¿Dónde consulto sobre cambios y otras condiciones?</summary><p>Escríbenos por WhatsApp para conversar sobre cambios, devoluciones y las demás condiciones de tu pedido.</p></details>
     </div></section>
   </main>
-  <footer><a class="brand footer-brand" href="./"><img src="./assets/logo-kalo.jpg" alt="" width="48" height="48"><span>KALO<small>LLEVA TU PASIÓN.</small></span></a><p>Para la cancha. Para la calle. Para ti.</p><a href="#preguntas">Preguntas frecuentes</a><a data-contact href="https://wa.me/50762809447" target="_blank" rel="noopener noreferrer">WhatsApp ↗</a><a href="https://www.instagram.com/kalo.jerseys/" target="_blank" rel="noopener noreferrer">@kalo.jerseys ↗</a><small>© <span id="year">2026</span> Kalo Jerseys · Panamá</small></footer>
+  <footer><a class="brand footer-brand" href="./"><img src="./assets/logo-kalo.png" alt="" width="48" height="48"><span>KALO<small>LLEVA TU PASIÓN.</small></span></a><p>Para la cancha. Para la calle. Para ti.</p><a href="#preguntas">Preguntas frecuentes</a><a data-contact href="https://wa.me/50762809447" target="_blank" rel="noopener noreferrer">WhatsApp ↗</a><a href="https://www.instagram.com/kalo.jerseys/" target="_blank" rel="noopener noreferrer">@kalo.jerseys ↗</a><small>© <span id="year">2026</span> Kalo Jerseys · Panamá</small></footer>
   <dialog id="product-dialog" aria-labelledby="product-title"><button class="close-dialog" data-close="product-dialog" aria-label="Cerrar producto">×</button><div id="product-detail"></div></dialog>
   <dialog id="bag-dialog" class="bag-dialog" aria-labelledby="bag-title"><div class="bag-heading"><div><p class="eyebrow">TUS ELEGIDOS</p><h2 id="bag-title">Mi pedido</h2></div><button class="close-dialog" data-close="bag-dialog" aria-label="Cerrar pedido">×</button></div><div id="bag-items"></div><div id="bag-summary"></div></dialog>
   <dialog id="size-guide-dialog" class="size-guide-dialog" aria-labelledby="guide-title"><button class="close-dialog" data-close="size-guide-dialog" aria-label="Cerrar guía de tallas">×</button><header class="guide-heading"><p class="eyebrow">ENCUENTRA TU AJUSTE</p><h2 id="guide-title">Guía de tallas</h2><p>Medidas proporcionadas por el proveedor.</p></header><div id="guide-tabs" class="guide-tabs" role="group" aria-label="Elegir guía de tallas"></div><div class="guide-inner"><p id="guide-context" class="guide-context" hidden></p><div class="guide-title-row"><h3 id="guide-type"></h3><div id="measurement-view" class="measurement-view" role="group" aria-label="Tipo de medidas"></div></div><div class="guide-layout"><div id="guide-diagram" class="guide-diagram"></div><div class="guide-measures"><div id="guide-table" class="guide-table" tabindex="0" aria-label="Tabla de medidas; desplaza horizontalmente para ver todas las columnas"></div><p id="guide-note" class="guide-note"></p><p id="guide-detail-note" class="guide-detail-note"></p><div id="guide-availability" class="guide-availability"></div></div></div><a id="guide-source" class="source-link" href="./assets/guides/hombre-proveedor.jpeg" target="_blank" rel="noopener noreferrer">Ver tabla original del proveedor ↗</a></div></dialog>

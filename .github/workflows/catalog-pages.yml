@@ -2,35 +2,14 @@ name: Validar catálogo y publicar Kalo
 
 on:
   push:
-    paths:
-      - 'catalog-update-ready/**'
-      - '.github/workflows/catalog-pages.yml'
-      - 'tools/catalog_package.py'
-      - 'tools/catalog_io.py'
-      - 'tools/verify_generated.cjs'
-      - 'index.html'
-      - 'store.js'
-      - 'catalog-core.js'
-      - 'styles.css'
-      - 'data/prices.js'
-      - 'cupones.js'
-      - 'cupones.css'
-      - 'fiestas-patrias.js'
-      - 'fiestas-patrias.css'
+    paths: ['catalog-update-ready/**', '.github/workflows/catalog-pages.yml', 'tools/**', '*.js', '*.css', 'index.html', 'data/**', 'assets/**']
   pull_request:
-    paths:
-      - 'catalog-update-ready/**'
-      - '.github/workflows/catalog-pages.yml'
-      - 'tools/**'
-      - 'catalog-core.js'
-      - 'cupones.js'
-      - 'cupones.css'
-      - 'fiestas-patrias.js'
-      - 'fiestas-patrias.css'
+    paths: ['catalog-update-ready/**', '.github/workflows/catalog-pages.yml', 'tools/**', '*.js', '*.css', 'index.html', 'data/**', 'assets/**']
   workflow_dispatch:
 
 permissions:
   contents: read
+  pages: read
 
 concurrency:
   group: kalo-pages-${{ github.ref }}
@@ -39,24 +18,120 @@ concurrency:
 jobs:
   validate-build:
     runs-on: ubuntu-latest
+    outputs:
+      pages_type: ${{ steps.pages.outputs.build_type }}
     steps:
       - uses: actions/checkout@v6
+      - name: Consultar la fuente de Pages sin modificarla
+        id: pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mode=$(gh api "repos/${GITHUB_REPOSITORY}/pages" --jq '.build_type' 2>/dev/null || printf 'unknown')
+          printf 'build_type=%s\n' "$mode" >> "$GITHUB_OUTPUT"
+          if [ "$mode" != 'workflow' ]; then
+            printf '%s\n' 'No se cambia Settings: la publicación por rama queda a cargo de GitHub Pages.' >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Validar manifiesto, hashes y catálogo
         run: python3 tools/catalog_package.py verify
-      - name: Preparar el sitio completo en una carpeta independiente
+      - name: Preparar el sitio sin archivos privados
         run: python3 tools/catalog_package.py build --output "${{ runner.temp }}/kalo-pages"
-      - name: Comprobar que el catálogo y el sitio generado cargan
-        run: node tools/verify_generated.cjs "${{ runner.temp }}/kalo-pages"
-      - name: Comprobar cupones y retirada del registro temporal
-        run: node tools/verify_coupons.cjs
+      - name: Comprobar sintaxis JavaScript
+        run: |
+          node --check store.js
+          node --check catalog-core.js
+          node --check cupones.js
+      - name: Comprobar sitio, portadas, filtros y precios
+        env:
+          KALO_BUILD_DIR: ${{ runner.temp }}/kalo-pages
+        run: |
+          node - <<'NODE'
+          const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
+          const root=path.resolve(process.env.KALO_BUILD_DIR||path.join(__dirname,'../..')),c={window:{}};
+          for(const name of ['data/catalog.js','data/prices.js','data/settings.js'])vm.runInNewContext(fs.readFileSync(path.join(root,name),'utf8'),c,{timeout:3000});
+          const products=c.window.KALO_CATALOG.products,core=require(path.join(root,'catalog-core.js'));
+          assert(products.length>0,'Catálogo vacío');assert.equal(new Set(products.map(p=>p.id)).size,products.length);
+          for(const p of products){assert(fs.existsSync(path.resolve(root,p.image)),p.id+' sin portada');const n=core.priceOf(p,c.window.KALO_PRICES);assert(n===null||Number.isFinite(n));}
+          const index=core.createIndex(products),state={q:'',sport:'',category:'',team:'',audience:'',version:'',season:'',favorites:false,sort:'new'};
+          assert.equal(core.filterProducts(products,state,c.window.KALO_PRICES,new Set(),index).length,products.length);
+          for(const sport of new Set(products.map(p=>p.sport)))assert(core.filterProducts(products,{...state,sport},c.window.KALO_PRICES,new Set(),index).every(p=>p.sport===sport));
+          const sample=products.find(p=>p.category==='Camisetas'&&p.sport==='Fútbol')||products[0];
+          assert(core.filterProducts(products,{...state,q:sample.id},c.window.KALO_PRICES,new Set(),index).some(p=>p.id===sample.id));
+          const bag=[{id:sample.id,size:'M',quantity:2,personalization:null,patches:[]}],byId=new Map(products.map(p=>[p.id,p]));
+          assert.equal(core.orderSummary(bag,byId,c.window.KALO_PRICES).count,2);assert(core.orderMessage(bag,byId,c.window.KALO_PRICES).includes(sample.id));
+          const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+          for(const m of html.matchAll(/\b(?:src|href)="([^"]+)"/g)){const url=m[1];if(!/^(?:https?:|#|mailto:|tel:)/.test(url))assert(fs.existsSync(path.resolve(root,url.split(/[?#]/)[0])),url);}
+          for(const name of ['store.js','catalog-core.js','styles.css','size-guides.js','size-guide-ui.js','size-guide.css'])assert(fs.existsSync(path.join(root,name)),name);
+          console.log(`OK: sitio generado con ${products.length} productos, portadas locales, búsqueda, filtros, precios, pedido y WhatsApp.`);
+          NODE
+      - name: Comprobar cupones, pedido y tipos de conjunto
+        env:
+          KALO_BUILD_DIR: ${{ runner.temp }}/kalo-pages
+        run: |
+          node - <<'NODE'
+          const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
+          const root=path.resolve(process.env.KALO_BUILD_DIR||path.join(__dirname,'../..')),core=require(path.join(root,'catalog-core.js')),data={window:{}};
+          for(const f of ['data/prices.js','data/catalog.js'])vm.runInNewContext(fs.readFileSync(path.join(root,f),'utf8'),data);
+          const prices=data.window.KALO_PRICES;
+          function engine(theme=true){const c={KaloCore:core};vm.createContext(c);vm.runInContext(fs.readFileSync(path.join(root,'cupones.js'),'utf8'),c);if(theme)vm.runInContext(fs.readFileSync(path.join(root,'fiestas-patrias.js'),'utf8'),c);return c.KaloCoupons;}
+          let coupons=engine();
+          const panama={id:'1',name:'Panamá',team:'Panamá',sport:'Fútbol',category:'Camisetas',audience:'Adulto',version:'Estándar',season:'2026',detail:'Local',original:'Panama Soccer Jersey',teamStatus:'confirmed'};
+          const madrid={...panama,id:'2',name:'Real Madrid',team:'Real Madrid',original:'Real Madrid soccer jersey'};
+          const map=new Map([[panama.id,panama],[madrid.id,madrid]]),fixturePrices={...prices,products:{1:70,2:65}};
+          const line=(id,quantity=1,options={})=>({id,size:'M',quantity,personalization:null,patches:[],...options});
+          const bag=[line('1'),line('2')];
+          assert.equal(coupons.calculate(bag,map,fixturePrices).totalCents,13500);
+          assert.equal(core.orderMessage(bag,map,fixturePrices),core.orderMessage(bag,map,fixturePrices,undefined,coupons.calculate(bag,map,fixturePrices)));
+          assert(coupons.validate(' ptyoff ',bag,map,fixturePrices).ok);assert(coupons.validate(' 5dOfF ',bag,map,fixturePrices).ok);
+          assert(!coupons.validate('PTYOFF',[line('2')],map,fixturePrices).ok);
+          for(const invalid of ['','NOEXISTE','<img src=x>','P T Y O F F','A'.repeat(25)])assert(!coupons.validate(invalid,bag,map,fixturePrices).ok);
+          let quote=coupons.calculate(bag,map,fixturePrices,['PTYOFF']);assert.equal(quote.totalCents,12450);assert.equal(quote.lines[0].unitAfterCents,5950);assert.equal(quote.lines[1].unitAfterCents,6500);
+          quote=coupons.calculate([line('1',2,{patches:['champions']}),line('2')],map,fixturePrices,['PTYOFF']);assert.equal(quote.totalCents,18700);assert.equal(quote.lines[0].unitAfterCents,6100);assert.equal(quote.lines[0].discountCents,2100);
+          const otherPanama={...panama,id:'3',audience:'Mujer',version:'Retro',season:'1998/99'};map.set('3',otherPanama);
+          quote=coupons.calculate([line('1',2),line('3',3),line('2')],map,fixturePrices,['PTYOFF']);assert.equal(quote.lines[0].discountCents,2100);assert.equal(quote.lines[1].discountCents,1800);assert.equal(quote.totalCents,28600);
+          for(const audience of ['Adulto','Mujer','Infantil'])for(const version of ['Estándar','Jugador','Retro'])for(const season of ['1998/99','2022/23','2026/27','Sin temporada']){
+           const p={...panama,audience,version,season};assert(coupons.validate('PTYOFF',[line('1')],new Map([['1',p]]),prices).ok);
+           const q=coupons.calculate([line('1',3)],new Map([['1',p]]),prices,['PTYOFF']);const base=Math.round(core.priceOf(p,prices)*100);assert.equal(q.totalCents,(base-Math.round(base*.15))*3);
+          }
+          for(const p of [{...panama,team:'Panama City FC'},{...panama,team:'Real Madrid',original:'Panama tour jersey'},{...panama,sport:'NBA'},{...panama,category:'Accesorios',original:'Panama Scarf'},{...panama,category:'Pantalones y shorts',original:'Panama Shorts'},{...panama,category:'Conjuntos',original:'Panama kid kits'}])assert(!coupons.validate('PTYOFF',[line('1')],new Map([['1',p]]),prices).ok);
+          quote=coupons.calculate([line('1')],map,{...fixturePrices,products:{1:100}},['5DOFF']);assert.equal(quote.totalCents,9500);assert.equal(quote.orderDiscountCents,500);
+          quote=coupons.calculate([line('1',3)],map,{...fixturePrices,products:{1:2}},['5DOFF']);assert.equal(quote.totalCents,100);assert.equal(quote.orderDiscountCents,500);
+          quote=coupons.calculate([line('1')],map,{...fixturePrices,products:{1:2}},['5DOFF']);assert.equal(quote.totalCents,0);assert.equal(quote.orderDiscountCents,200);
+          assert(!coupons.validate('5DOFF',bag,map,fixturePrices,['PTYOFF']).ok);assert.equal(coupons.restore(['PTYOFF','5DOFF']).length,1);
+          coupons.configure({allowStacking:true});quote=coupons.calculate([line('1')],map,fixturePrices,['5DOFF','PTYOFF']);assert.equal(quote.totalCents,5450);coupons.configure({allowStacking:false});
+          const pendingPrices={...fixturePrices,products:{1:null,2:65}};
+          quote=coupons.calculate(bag,map,pendingPrices,['5DOFF']);assert.equal(quote.unknown,1);assert(quote.hasPendingDiscount);assert.equal(quote.orderDiscountCents,0);assert.equal(quote.totalCents,6500);
+          quote=coupons.calculate(bag,map,pendingPrices,['PTYOFF']);assert(quote.lines[0].discounts[0].pending);assert.equal(quote.totalCents,6500);
+          let message=core.orderMessage(bag,map,pendingPrices,n=>'USD '+n.toFixed(2),quote);assert(message.includes('Total del pedido: por confirmar.'));assert(!message.includes('Total después de descuentos (sin envío)'));
+          quote=coupons.calculate([line('1',2,{personalization:{name:'ANDRÉS',number:'10'},patches:['league']}),line('2')],map,fixturePrices,['PTYOFF']);
+          message=core.orderMessage([line('1',2,{personalization:{name:'ANDRÉS',number:'10'},patches:['league']}),line('2')],map,fixturePrices,n=>'USD '+n.toFixed(2),quote);
+          for(const text of ['Nombre: ANDRÉS','Dorsal: 10','Talla: M · Cantidad: 2','Parche de Liga: USD 1.50','Descuento PTYOFF: -15 %','Precio con descuento: USD 61.00','Total después de descuentos (sin envío): USD 187.00','https://nn88.x.yupoo.com/albums/1?uid=1'])assert(message.includes(text),text);
+          quote=coupons.calculate([line('1')],map,{...fixturePrices,products:{1:100}},['5DOFF']);message=core.orderMessage([line('1')],map,{...fixturePrices,products:{1:100}},n=>'USD '+n.toFixed(2),quote);for(const text of ['Subtotal original: USD 100.00','Descuento 5DOFF por pedido: -USD 5.00','Total después de descuentos (sin envío): USD 95.00'])assert(message.includes(text));
+          const restored=JSON.parse(JSON.stringify({bag:bag,codes:['pTyOfF']}));assert.equal(coupons.restore(restored.codes)[0],'PTYOFF');assert.equal(coupons.calculate(restored.bag,map,fixturePrices,coupons.restore(restored.codes)).totalCents,12450);
+          coupons=engine(false);assert.equal(coupons.restore(['PTYOFF']).length,1);assert(coupons.validate('PTYOFF',bag,map,fixturePrices).ok);assert(coupons.validate('5DOFF',bag,map,fixturePrices).ok);assert.equal(coupons.calculate(bag,map,fixturePrices,['5DOFF']).totalCents,13000);
+          coupons=engine();const actual=data.window.KALO_CATALOG.products;const realPanama=actual.filter(p=>coupons.validate('PTYOFF',[line(p.id)],new Map([[p.id,p]]),prices).ok);const expectedActual=actual.filter(p=>p.team==='Panamá'&&p.sport==='Fútbol'&&p.category==='Camisetas'&&core.classifyProduct(p,prices).shirt);assert.deepEqual(realPanama.map(p=>p.id),expectedActual.map(p=>p.id));
+          const html=fs.readFileSync(path.join(root,'index.html'),'utf8');assert(!html.includes('PTYOFF'));assert(!html.includes('5DOFF'));assert(fs.readFileSync(path.join(root,'cupones.js'),'utf8').includes('PTYOFF'));
+          for(const f of ['cupones.css','fiestas-patrias.css']){const css=fs.readFileSync(path.join(root,f),'utf8');assert.equal((css.match(/\{/g)||[]).length,(css.match(/\}/g)||[]).length);}
+          console.log(`OK: ${realPanama.length} camisetas reales de Panamá; 36 combinaciones de versión/público/temporada; ejemplo $124.50; parches excluidos; cantidades; fijo por pedido y límite cero; sin acumulación; restauración; precios pendientes; WhatsApp; motor permanente sin tema.`);
+
+          const trainingSet=actual.find(p=>p.id==='258577640'),normalSet=actual.find(p=>p.id==='258578108');
+          assert(trainingSet&&normalSet);
+          assert(core.classifyProduct(trainingSet,prices).trainingSet);
+          assert(!core.classifyProduct(trainingSet,prices).personalizable);
+          assert.equal(core.patchOptions(trainingSet,prices).length,0);
+          for(const version of ['Estándar','Jugador','Retro']){const p={...normalSet,version};assert(core.classifyProduct(p,prices).personalizable);assert.equal(core.patchOptions(p,prices).length,2);}
+          const storeSource=fs.readFileSync(path.join(root,'store.js'),'utf8');
+          for(const marker of ['const coupons=window.KaloCoupons','function couponHTML','coupons.calculate','coupon-form'])assert(storeSource.includes(marker),'Integración de cupones ausente: '+marker);
+          console.log('OK: formulario de cupones conectado; entrenamiento sin opciones; conjunto normal con opciones.');
+          NODE
       - name: Crear artefacto de Pages
-        if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+        if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && steps.pages.outputs.build_type == 'workflow'
         uses: actions/upload-pages-artifact@v4
         with:
           path: ${{ runner.temp }}/kalo-pages
 
   deploy:
-    if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && needs.validate-build.outputs.pages_type == 'workflow'
     needs: validate-build
     runs-on: ubuntu-latest
     permissions:

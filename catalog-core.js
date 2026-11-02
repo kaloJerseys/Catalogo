@@ -77,9 +77,15 @@
     const longSleeve=shirt&&/\blong sleeve(?:s|d)?\b|\blongsleeve(?:s|d)?\b|mangas? largas?/.test(text+' '+normalize(p.detail));
     const casual=/\bt shirts?\b|\btees?\b|\bcasual\b|\bcrawling\b|\bromper\b|\bonesie\b/.test(text)||(/\bcotton\b/.test(text)&&!/\bjerseys?\b/.test(text));
     const jerseyEvidence=/\bjerseys?\b|\bsoccer\b|\bfootball\b|\bbasketball\b|\bplayer edition\b/.test(text)||p.teamStatus==='confirmed';
-    const personalizable=shirt&&(verified.personalizable===true||(verified.personalizable!==false&&!casual&&jerseyEvidence&&['Fútbol','NBA','NFL'].includes(sport)));
-    const footballPatches=shirt&&sport==='Fútbol'&&!casual&&verified.patches!==false;
-    return {sport,accessory,pants,polo,set,jacket,hoodie,cotton,jacketSet,shirt,longSleeve,casual,personalizable,footballPatches,garment:verified.garment||''};
+    // Facetas completas del catálogo; el título original resuelve los seis casos «Prepartido».
+    const trainingFacet=String(p.detail||'').split('·').some(value=>['entrenamiento','training'].includes(normalize(value)));
+    const trainingTitle=/\b(?:training|entrenamiento) (?:(?:soccer|football) )?(?:suits?|sets?|tracksuits?|(?:kids? )?kits?)\b/.test(text)&&!/\b(?:not|non|no|sin) (?:training|entrenamiento)\b/.test(text);
+    const trainingSet=set&&(trainingFacet||trainingTitle);
+    // «Tracksuit» no acredita una camiseta: se conservan excluidos los tipos sin confirmar.
+    const jerseySet=set&&!trainingSet&&!accessory&&!polo&&!jacket&&!hoodie&&!casual&&verified.garment!=='jacket_pants_set'&&!/\btracksuits?\b|\btrack suits?\b/.test(text);
+    const personalizable=(shirt||jerseySet)&&(verified.personalizable===true||(verified.personalizable!==false&&!casual&&jerseyEvidence&&['Fútbol','NBA','NFL'].includes(sport)));
+    const footballPatches=(shirt||jerseySet)&&sport==='Fútbol'&&!casual&&verified.patches!==false;
+    return {sport,accessory,pants,polo,set,jacket,hoodie,cotton,jacketSet,shirt,longSleeve,casual,trainingSet,jerseySet,personalizable,footballPatches,garment:verified.garment||''};
   }
   function priceRule(p,prices={}){
     const a=classifyProduct(p,prices);
@@ -147,18 +153,29 @@
   }
   function productUrl(base,id){const url=new URL(base);url.search='';url.hash='';url.searchParams.set('producto',String(id));return url.href;}
   function orderSummary(bag,products,prices){let subtotal=0,unknown=0,count=0;for(const line of bag){const p=products.get(line.id);if(!p)continue;const n=linePrice(p,line,prices).unit;count+=line.quantity;if(n===null)unknown+=line.quantity;else subtotal+=Math.round(n*100)*line.quantity;}return {subtotal:subtotal/100,unknown,count};}
-  function orderMessage(bag,products,prices,money=n=>new Intl.NumberFormat('es-PA',{style:'currency',currency:'USD'}).format(n)){
+  function orderMessage(bag,products,prices,money=n=>new Intl.NumberFormat('es-PA',{style:'currency',currency:'USD'}).format(n),quote=null){
     const lines=['¡Hola, Kalo! Me interesan estos productos:'];
-    bag.forEach((line,i)=>{const p=products.get(line.id);if(!p)return;const options=validateOptions(p,line,prices),cost=linePrice(p,line,prices);
+    bag.forEach((line,i)=>{const p=products.get(line.id);if(!p)return;const options=validateOptions(p,line,prices),adjusted=quote?.lines[i],cost=adjusted?.cost||linePrice(p,line,prices);
       lines.push('',`${i+1}. ${p.name}`,p.detail,`Talla: ${line.size} · Cantidad: ${line.quantity}`,`Ref. ${p.id}`,cost.base===null?'Precio base: por confirmar':`Precio base: ${money(cost.base)} c/u`);
       if(options.personalization)lines.push('Personalización: Sí (GRATIS)',`Nombre: ${options.personalization.name}`,`Dorsal: ${options.personalization.number}`);else lines.push('Sin personalización');
       for(const patch of cost.patches)lines.push(`${patch.label}: ${money(patch.price)} por unidad`);
       lines.push(cost.unit===null?'Precio unitario: base por confirmar'+(cost.surcharge?` + ${money(cost.surcharge)} de parches`:''):`Precio unitario: ${money(cost.unit)}`+(cost.patches.length?` (base ${money(cost.base)} + parches ${money(cost.surcharge)})`:''));
       if(cost.unit!==null)lines.push(`Subtotal (${line.quantity} ${line.quantity===1?'unidad':'unidades'}): ${money(Math.round(cost.unit*100)*line.quantity/100)}`);
+      if(quote?.codes.length){
+        for(const discount of adjusted?.discounts||[])lines.push(discount.pending?`Descuento ${discount.code}: -${discount.percent} % sobre la camiseta, por confirmar al conocer su precio`:`Descuento ${discount.code}: -${discount.percent} % sobre la camiseta (${money(discount.perUnitCents/100)} c/u; ${money(discount.totalCents/100)} en esta línea)`);
+        if(adjusted?.unitAfterCents!==null&&adjusted?.unitAfterCents!==undefined)lines.push(`${adjusted.discountCents?'Precio con descuento':'Precio final por unidad'}: ${money(adjusted.unitAfterCents/100)} c/u${cost.patches.length?' (parches sin descuento por producto)':''}`,`Subtotal actualizado de esta línea: ${money(adjusted.totalAfterCents/100)}`);
+      }
       lines.push('Link del producto: https://nn88.x.yupoo.com/albums/'+encodeURIComponent(p.id)+'?uid=1');
     });
-    const summary=orderSummary(bag,products,prices);
-    lines.push('',`${summary.unknown?'Subtotal conocido':'Subtotal de productos'}: ${money(summary.subtotal)}`);
+    const summary=quote?.original||orderSummary(bag,products,prices);
+    lines.push('',`${quote?.codes.length?(summary.unknown?'Subtotal original conocido':'Subtotal original'):(summary.unknown?'Subtotal conocido':'Subtotal de productos')}: ${money(summary.subtotal)}`);
+    if(quote?.codes.length){
+      lines.push(`Código${quote.codes.length>1?'s':''} aplicado${quote.codes.length>1?'s':''}: ${quote.codes.join(', ')}`);
+      if(quote.lineDiscountCents)lines.push(`Descuentos sobre camisetas: -${money(quote.lineDiscountCents/100)}`);
+      for(const discount of quote.orderDiscounts)lines.push(discount.pending?`Descuento ${discount.code}: ${money(discount.configuredCents/100)} por pedido, pendiente de confirmar los precios`:`Descuento ${discount.code} por pedido: -${money(discount.amountCents/100)}`);
+      lines.push(`${quote.unknown?'Subtotal conocido después de descuentos':'Total después de descuentos (sin envío)'}: ${money(quote.totalCents/100)}`);
+      if(quote.unknown)lines.push('Total del pedido: por confirmar.');
+    }
     if(summary.unknown)lines.push('Hay prendas con precio por confirmar.');
     lines.push('',deliveryPayment,deliveryEstimate,'','¿Me confirman el precio final y los detalles del pedido?');
     return lines.join('\n');
