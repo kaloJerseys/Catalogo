@@ -27,8 +27,8 @@
   const searchable = core.createIndex(products);
   bag = bag.filter(x=>byId.has(x.id) && Number.isInteger(x.quantity) && x.quantity>0 && typeof x.size==='string').map(x=>({...x,quantity:Math.min(x.quantity,99)}));
   bag=bag.map(line=>{const p=byId.get(line.id);return {...line,size:p.audience==='Mujer'&&line.size==='XXL'?'2XL':p.audience==='Adulto'&&line.size==='2XL'?'XXL':line.size};});
-  let rejectedLines=0;
-  bag=bag.flatMap(line=>{try{const p=byId.get(line.id),options=core.classifyProduct(p,prices).trainingSet?{...line,personalization:null,patches:[]}:line;return [{id:line.id,size:line.size,quantity:line.quantity,...core.validateOptions(p,options,prices)}];}catch{rejectedLines++;return [];}});
+  let rejectedLines=0,removedSavedPatches=0;
+  bag=bag.flatMap(line=>{try{const p=byId.get(line.id),options=core.classifyProduct(p,prices).trainingSet?{...line,personalization:null,patches:[]}:line;const restored=core.restoreOptions(p,options,prices);removedSavedPatches+=restored.removedPatches;return [{id:line.id,size:line.size,quantity:line.quantity,...restored.options}];}catch{rejectedLines++;return [];}});
   function priceOf(p) { return core.priceOf(p,prices); }
   function priceHTML(p) { const v=priceOf(p); return `<span class="price${v===null?' consult':''}">${v===null?'Consultar precio':esc(money(v))}</span>`; }
   function sourceOf(p) { return `https://nn88.x.yupoo.com/albums/${p.id}?uid=1`; }
@@ -156,6 +156,7 @@
   $('#hero-one').src=first.image;$('#hero-one').alt=first.name+' · '+first.detail;$('#hero-one').referrerPolicy='no-referrer';
   $('#hero-two').src=second.image;$('#hero-two').alt=second.name+' · '+second.detail;$('#hero-two').referrerPolicy='no-referrer';
   wireImageErrors($('.hero-art'));persistBag();render();
+  if(removedSavedPatches)toast('Quitamos parches que no corresponden al equipo. Tus productos siguen en el pedido; revisa el total.');
   if(rejectedLines)toast('Se retiraron del carrito opciones guardadas no válidas. Revisa tu selección.');
   const linkedProduct=params.get('producto');if(linkedProduct){if(byId.has(linkedProduct))showProduct(linkedProduct);else toast('Esta referencia no está disponible en el catálogo.');}
 })();

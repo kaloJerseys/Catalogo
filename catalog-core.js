@@ -84,7 +84,8 @@
     // «Tracksuit» no acredita una camiseta: se conservan excluidos los tipos sin confirmar.
     const jerseySet=set&&!trainingSet&&!accessory&&!polo&&!jacket&&!hoodie&&!casual&&verified.garment!=='jacket_pants_set'&&!/\btracksuits?\b|\btrack suits?\b/.test(text);
     const personalizable=(shirt||jerseySet)&&(verified.personalizable===true||(verified.personalizable!==false&&!casual&&jerseyEvidence&&['Fútbol','NBA','NFL'].includes(sport)));
-    const footballPatches=(shirt||jerseySet)&&sport==='Fútbol'&&!casual&&verified.patches!==false;
+    const trainingShirt=trainingFacet||/\btraining\b|\bpre match\b|\bprematch\b|\bwarm up\b|\bprepartido\b|\bentrenamiento\b/.test(text);
+    const footballPatches=(shirt||jerseySet)&&sport==='Fútbol'&&!casual&&!trainingShirt&&verified.patches!==false;
     return {sport,accessory,pants,polo,set,jacket,hoodie,cotton,jacketSet,shirt,longSleeve,casual,trainingSet,jerseySet,personalizable,footballPatches,garment:verified.garment||''};
   }
   function priceRule(p,prices={}){
@@ -108,9 +109,19 @@
     const n=Object.hasOwn(prices.products||{},product.id)?prices.products[product.id]:rule&&Object.hasOwn(prices[rule.section]||{},rule.key)?prices[rule.section][rule.key]:prices.categories?.[product.category];
     return validPrice(n)?n:null;
   }
+  function patchSeason(product){
+    if(product.seasonStatus!=='confirmed')return null;
+    const m=String(product.season||'').trim().match(/^(\d{4})[/-](\d{2}|\d{4})$/);
+    if(!m)return null;
+    const start=Number(m[1]),end=Number(m[2]);
+    if(m[2].length===4?end!==start+1:end!==(start+1)%100)return null;
+    return `${start}/${String(start+1).slice(-2)}`;
+  }
   function patchOptions(product,prices){
-    if(!classifyProduct(product,prices).footballPatches)return [];
-    return ['champions','league'].filter(id=>validPrice(prices.patches?.[id]?.price)).map(id=>({id,label:prices.patches[id].label||({'champions':'Parche Champions League','league':'Parche de Liga'}[id]),price:prices.patches[id].price}));
+    if(!classifyProduct(product,prices).footballPatches||product.teamStatus!=='confirmed')return [];
+    const season=patchSeason(product);if(!season)return [];
+    const club=normalize(product.team),perProduct=prices.productAttributes?.[product.id]?.patches;
+    return ['champions','league'].filter(id=>Array.isArray(prices.patchEligibility?.[id]?.[season])&&prices.patchEligibility[id][season].includes(club)&&(!Array.isArray(perProduct)||perProduct.includes(id))&&validPrice(prices.patches?.[id]?.price)).map(id=>({id,label:prices.patches[id].label||({'champions':'Parche Champions League','league':'Parche de Liga'}[id]),price:prices.patches[id].price}));
   }
   function validateOptions(product,options={},prices={}){
     let personalization=null;
@@ -127,6 +138,12 @@
     if(!Array.isArray(requested)||requested.length>2||requested.some(id=>typeof id!=='string'||!allowed.includes(id)))throw new Error('Revisa los parches seleccionados para esta prenda.');
     const patches=[...new Set(requested)].sort();
     return {personalization,patches};
+  }
+  function restoreOptions(product,options={},prices={}){
+    const requested=options.patches??[];
+    if(!Array.isArray(requested)||requested.length>2||requested.some(id=>!['champions','league'].includes(id)))throw new Error('Parches guardados no válidos.');
+    const allowed=patchOptions(product,prices).map(p=>p.id),patches=requested.filter(id=>allowed.includes(id));
+    return {options:validateOptions(product,{...options,patches},prices),removedPatches:requested.length-patches.length};
   }
   function lineKey(line){return JSON.stringify([String(line.id),line.size,line.personalization?{name:line.personalization.name,number:line.personalization.number}:null,[...new Set(line.patches||[])].sort()]);}
   function addLine(bag,line){
@@ -180,5 +197,5 @@
     lines.push('',deliveryPayment,deliveryEstimate,'','¿Me confirman el precio final y los detalles del pedido?');
     return lines.join('\n');
   }
-  return {normalize,priceOf,createIndex,filterProducts,orderSummary,generalDefinitions,generalKey,versionLabel,teamSearchText,matchesSearch,changeLineSize,productUrl,classifyProduct,priceRule,patchOptions,validateOptions,lineKey,addLine,linePrice,orderMessage,deliveryPayment,deliveryEstimate};
+  return {normalize,priceOf,createIndex,filterProducts,orderSummary,generalDefinitions,generalKey,versionLabel,teamSearchText,matchesSearch,changeLineSize,productUrl,classifyProduct,priceRule,patchSeason,patchOptions,validateOptions,restoreOptions,lineKey,addLine,linePrice,orderMessage,deliveryPayment,deliveryEstimate};
 });

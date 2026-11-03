@@ -50,7 +50,7 @@ jobs:
           node - <<'NODE'
           const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
           const root=path.resolve(process.env.KALO_BUILD_DIR||path.join(__dirname,'../..')),c={window:{}};
-          for(const name of ['data/catalog.js','data/prices.js','data/settings.js'])vm.runInNewContext(fs.readFileSync(path.join(root,name),'utf8'),c,{timeout:3000});
+          for(const name of ['data/catalog.js','data/prices.js','data/patch-rules.js','data/settings.js'])vm.runInNewContext(fs.readFileSync(path.join(root,name),'utf8'),c,{timeout:3000});
           const products=c.window.KALO_CATALOG.products,core=require(path.join(root,'catalog-core.js'));
           assert(products.length>0,'Catálogo vacío');assert.equal(new Set(products.map(p=>p.id)).size,products.length);
           for(const p of products){assert(fs.existsSync(path.resolve(root,p.image)),p.id+' sin portada');const n=core.priceOf(p,c.window.KALO_PRICES);assert(n===null||Number.isFinite(n));}
@@ -73,12 +73,12 @@ jobs:
           node - <<'NODE'
           const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
           const root=path.resolve(process.env.KALO_BUILD_DIR||path.join(__dirname,'../..')),core=require(path.join(root,'catalog-core.js')),data={window:{}};
-          for(const f of ['data/prices.js','data/catalog.js'])vm.runInNewContext(fs.readFileSync(path.join(root,f),'utf8'),data);
+          for(const f of ['data/prices.js','data/patch-rules.js','data/catalog.js'])vm.runInNewContext(fs.readFileSync(path.join(root,f),'utf8'),data);
           const prices=data.window.KALO_PRICES;
           function engine(theme=true){const c={KaloCore:core};vm.createContext(c);vm.runInContext(fs.readFileSync(path.join(root,'cupones.js'),'utf8'),c);if(theme)vm.runInContext(fs.readFileSync(path.join(root,'fiestas-patrias.js'),'utf8'),c);return c.KaloCoupons;}
           let coupons=engine();
           const panama={id:'1',name:'Panamá',team:'Panamá',sport:'Fútbol',category:'Camisetas',audience:'Adulto',version:'Estándar',season:'2026',detail:'Local',original:'Panama Soccer Jersey',teamStatus:'confirmed'};
-          const madrid={...panama,id:'2',name:'Real Madrid',team:'Real Madrid',original:'Real Madrid soccer jersey'};
+          const madrid={...panama,id:'2',name:'Real Madrid',team:'Real Madrid',original:'Real Madrid soccer jersey',season:'2026/27',seasonStatus:'confirmed'};
           const map=new Map([[panama.id,panama],[madrid.id,madrid]]),fixturePrices={...prices,products:{1:70,2:65}};
           const line=(id,quantity=1,options={})=>({id,size:'M',quantity,personalization:null,patches:[],...options});
           const bag=[line('1'),line('2')];
@@ -88,7 +88,8 @@ jobs:
           assert(!coupons.validate('PTYOFF',[line('2')],map,fixturePrices).ok);
           for(const invalid of ['','NOEXISTE','<img src=x>','P T Y O F F','A'.repeat(25)])assert(!coupons.validate(invalid,bag,map,fixturePrices).ok);
           let quote=coupons.calculate(bag,map,fixturePrices,['PTYOFF']);assert.equal(quote.totalCents,12450);assert.equal(quote.lines[0].unitAfterCents,5950);assert.equal(quote.lines[1].unitAfterCents,6500);
-          quote=coupons.calculate([line('1',2,{patches:['champions']}),line('2')],map,fixturePrices,['PTYOFF']);assert.equal(quote.totalCents,18700);assert.equal(quote.lines[0].unitAfterCents,6100);assert.equal(quote.lines[0].discountCents,2100);
+          assert.throws(()=>coupons.calculate([line('1',2,{patches:['champions']})],map,fixturePrices,['PTYOFF']));
+          quote=coupons.calculate([line('1',2),line('2',1,{patches:['champions']})],map,fixturePrices,['PTYOFF']);assert.equal(quote.totalCents,18550);assert.equal(quote.lines[0].unitAfterCents,5950);assert.equal(quote.lines[0].discountCents,2100);assert.equal(quote.lines[1].cost.surcharge,1.5);
           const otherPanama={...panama,id:'3',audience:'Mujer',version:'Retro',season:'1998/99'};map.set('3',otherPanama);
           quote=coupons.calculate([line('1',2),line('3',3),line('2')],map,fixturePrices,['PTYOFF']);assert.equal(quote.lines[0].discountCents,2100);assert.equal(quote.lines[1].discountCents,1800);assert.equal(quote.totalCents,28600);
           for(const audience of ['Adulto','Mujer','Infantil'])for(const version of ['Estándar','Jugador','Retro'])for(const season of ['1998/99','2022/23','2026/27','Sin temporada']){
@@ -105,9 +106,9 @@ jobs:
           quote=coupons.calculate(bag,map,pendingPrices,['5DOFF']);assert.equal(quote.unknown,1);assert(quote.hasPendingDiscount);assert.equal(quote.orderDiscountCents,0);assert.equal(quote.totalCents,6500);
           quote=coupons.calculate(bag,map,pendingPrices,['PTYOFF']);assert(quote.lines[0].discounts[0].pending);assert.equal(quote.totalCents,6500);
           let message=core.orderMessage(bag,map,pendingPrices,n=>'USD '+n.toFixed(2),quote);assert(message.includes('Total del pedido: por confirmar.'));assert(!message.includes('Total después de descuentos (sin envío)'));
-          quote=coupons.calculate([line('1',2,{personalization:{name:'ANDRÉS',number:'10'},patches:['league']}),line('2')],map,fixturePrices,['PTYOFF']);
-          message=core.orderMessage([line('1',2,{personalization:{name:'ANDRÉS',number:'10'},patches:['league']}),line('2')],map,fixturePrices,n=>'USD '+n.toFixed(2),quote);
-          for(const text of ['Nombre: ANDRÉS','Dorsal: 10','Talla: M · Cantidad: 2','Parche de Liga: USD 1.50','Descuento PTYOFF: -15 %','Precio con descuento: USD 61.00','Total después de descuentos (sin envío): USD 187.00','https://nn88.x.yupoo.com/albums/1?uid=1'])assert(message.includes(text),text);
+          quote=coupons.calculate([line('1',2,{personalization:{name:'ANDRÉS',number:'10'},patches:[]}),line('2',1,{patches:['league']})],map,fixturePrices,['PTYOFF']);
+          message=core.orderMessage([line('1',2,{personalization:{name:'ANDRÉS',number:'10'},patches:[]}),line('2',1,{patches:['league']})],map,fixturePrices,n=>'USD '+n.toFixed(2),quote);
+          for(const text of ['Nombre: ANDRÉS','Dorsal: 10','Talla: M · Cantidad: 2','Parche de Liga: USD 1.50','Descuento PTYOFF: -15 %','Precio con descuento: USD 59.50','Total después de descuentos (sin envío): USD 185.50','https://nn88.x.yupoo.com/albums/1?uid=1'])assert(message.includes(text),text);
           quote=coupons.calculate([line('1')],map,{...fixturePrices,products:{1:100}},['5DOFF']);message=core.orderMessage([line('1')],map,{...fixturePrices,products:{1:100}},n=>'USD '+n.toFixed(2),quote);for(const text of ['Subtotal original: USD 100.00','Descuento 5DOFF por pedido: -USD 5.00','Total después de descuentos (sin envío): USD 95.00'])assert(message.includes(text));
           const restored=JSON.parse(JSON.stringify({bag:bag,codes:['pTyOfF']}));assert.equal(coupons.restore(restored.codes)[0],'PTYOFF');assert.equal(coupons.calculate(restored.bag,map,fixturePrices,coupons.restore(restored.codes)).totalCents,12450);
           coupons=engine(false);assert.equal(coupons.restore(['PTYOFF']).length,1);assert(coupons.validate('PTYOFF',bag,map,fixturePrices).ok);assert(coupons.validate('5DOFF',bag,map,fixturePrices).ok);assert.equal(coupons.calculate(bag,map,fixturePrices,['5DOFF']).totalCents,13000);
@@ -132,11 +133,15 @@ jobs:
           assert(core.classifyProduct(trainingSet,prices).trainingSet);
           assert(!core.classifyProduct(trainingSet,prices).personalizable);
           assert.equal(core.patchOptions(trainingSet,prices).length,0);
-          for(const version of ['Estándar','Jugador','Retro']){const p={...normalSet,version};assert(core.classifyProduct(p,prices).personalizable);assert.equal(core.patchOptions(p,prices).length,2);}
+          for(const version of ['Estándar','Jugador','Retro']){const p={...normalSet,version};assert(core.classifyProduct(p,prices).personalizable);assert.deepEqual(core.patchOptions(p,prices).map(p=>p.id),['champions']);}
           const storeSource=fs.readFileSync(path.join(root,'store.js'),'utf8');
           for(const marker of ['const coupons=window.KaloCoupons','function couponHTML','coupons.calculate','coupon-form'])assert(storeSource.includes(marker),'Integración de cupones ausente: '+marker);
           console.log('OK: formulario de cupones conectado; entrenamiento sin opciones; conjunto normal con opciones.');
           NODE
+      - name: Verificar parches por temporada y recuperación de pedidos
+        env:
+          KALO_BUILD_DIR: ${{ runner.temp }}/kalo-pages
+        run: node tools/verify_patch_rules.cjs
       - name: Crear artefacto de Pages
         if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && steps.pages.outputs.build_type == 'workflow'
         uses: actions/upload-pages-artifact@v4
