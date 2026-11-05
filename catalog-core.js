@@ -48,8 +48,8 @@
     {key:'nba_set',sport:'NBA',label:'Conjunto (suéter + short)'},
     {key:'f1_base',sport:'F1 y NFL',label:'F1 · prendas base'},
     {key:'nfl_base',sport:'F1 y NFL',label:'NFL · prendas base'},
-    {key:'polo_regular',section:'garments',sport:'Polos',label:'Polo regular'},
-    {key:'polo_retro',section:'garments',sport:'Polos',label:'Polo Retro'},
+    {key:'polo_regular',section:'garments',sport:'Polos',label:'Polo regular · 2023 en adelante'},
+    {key:'polo_retro',section:'garments',sport:'Polos',label:'Polo Retro · hasta 2022 / edición Retro'},
     {key:'long_sleeve_jersey',section:'garments',sport:'Otras prendas',label:'Camiseta de manga larga'},
     {key:'jacket',section:'garments',sport:'Otras prendas',label:'Chaqueta / abrigo'},
     {key:'reversible_windbreaker',section:'garments',sport:'Otras prendas',label:'Rompevientos reversible'},
@@ -60,9 +60,14 @@
     {key:'Pantalones y shorts',section:'categories',sport:'Por confirmar',label:'Otros pantalones y shorts'},
     {key:'Camisetas',section:'categories',sport:'Por confirmar',label:'Otras camisetas sin tarifa asignada'}
   ];
-  function versionLabel(p){return p.version==='Estándar'&&p.sport==='Fútbol'?'Fan / Aficionado':p.version;}
+  // Corte comercial fijo: se usa la temporada de la prenda, no el año actual ni el título.
+  function effectiveVersion(p){
+    const year=String(p.season||'').trim().match(/^((?:19|20)\d{2})(?:$|[/-]\d{2,4}$)/);
+    return p.version==='Retro'||year&&Number(year[1])<=2022?'Retro':p.version;
+  }
+  function versionLabel(p){const version=effectiveVersion(p);return version==='Estándar'&&p.sport==='Fútbol'?'Fan / Aficionado':version;}
   function generalKey(p){
-    if(p.sport==='Fútbol'&&p.category==='Camisetas')return p.version==='Retro'?'football_retro':p.version==='Jugador'?'football_player':'football_fan';
+    if(p.sport==='Fútbol'&&p.category==='Camisetas')return effectiveVersion(p)==='Retro'?'football_retro':p.version==='Jugador'?'football_player':'football_fan';
     if(p.sport==='NBA'){
       if(p.category==='Camisetas')return 'nba_jersey';
       if(p.category==='Pantalones y shorts'&&/\bshorts?\b/.test(normalize(p.original||p.detail)))return 'nba_shorts';
@@ -105,7 +110,7 @@
   function priceRule(p,prices={}){
     const a=classifyProduct(p,prices);
     if(a.garment&&Object.hasOwn(prices.garments||{},a.garment))return {section:'garments',key:a.garment};
-    if(a.polo)return {section:'garments',key:p.version==='Retro'?'polo_retro':'polo_regular'};
+    if(a.polo)return {section:'garments',key:effectiveVersion(p)==='Retro'?'polo_retro':'polo_regular'};
     if(a.jacketSet)return {section:'garments',key:'jacket_pants_set'};
     if(a.jacket&&/\breversible\b|\bdouble sided\b|\btwo sided\b/.test(normalize(p.original)))return {section:'garments',key:'reversible_windbreaker'};
     if(a.jacket)return {section:'garments',key:'jacket'};
@@ -174,7 +179,7 @@
     return {base,patches,surcharge,unit};
   }
   function createIndex(products){return new Map(products.map(p=>{let text=normalize([p.name,p.original,p.detail,p.sport,p.category,p.audience,p.version,versionLabel(p),p.season,p.collection,p.code,p.id,teamSearchText(p.team),garmentAliases(p)].join(' '));if(/\b(?:camisetas?|jerseys?|sueter(?:es)?|shirts?)\b/.test(text))text+=' camiseta camisetas jersey jerseys sueter sueteres shirt shirts';return [p.id,text];}));}
-  function filterProducts(products,state,prices,favorites,index){const words=normalize(state.q).split(/\s+/).filter(Boolean);const list=products.filter(p=>(!state.sport||p.sport===state.sport)&&(!state.category||p.category===state.category)&&(!state.team||p.team===state.team)&&(!state.audience||p.audience===state.audience)&&(!state.version||p.version===state.version)&&(!state.season||p.season===state.season)&&(!state.favorites||favorites.has(p.id))&&words.every(w=>index.get(p.id).includes(w)));if(state.sort==='name')list.sort((a,b)=>a.name.localeCompare(b.name,'es',{numeric:true}));if(state.sort==='price-low'||state.sort==='price-high')list.sort((a,b)=>{const x=priceOf(a,prices),y=priceOf(b,prices);if(x===null)return y===null?0:1;if(y===null)return -1;return state.sort==='price-low'?x-y:y-x;});return list;}
+  function filterProducts(products,state,prices,favorites,index){const words=normalize(state.q).split(/\s+/).filter(Boolean);const list=products.filter(p=>(!state.sport||p.sport===state.sport)&&(!state.category||p.category===state.category)&&(!state.team||p.team===state.team)&&(!state.audience||p.audience===state.audience)&&(!state.version||effectiveVersion(p)===state.version)&&(!state.season||p.season===state.season)&&(!state.favorites||favorites.has(p.id))&&words.every(w=>index.get(p.id).includes(w)));if(state.sort==='name')list.sort((a,b)=>a.name.localeCompare(b.name,'es',{numeric:true}));if(state.sort==='price-low'||state.sort==='price-high')list.sort((a,b)=>{const x=priceOf(a,prices),y=priceOf(b,prices);if(x===null)return y===null?0:1;if(y===null)return -1;return state.sort==='price-low'?x-y:y-x;});return list;}
   function changeLineSize(bag,index,size,allowed){
     if(!Number.isInteger(index)||!bag[index]||!allowed.includes(size))throw new Error('Elige una talla de la lista.');
     const next=bag.map(line=>({...line})),line=next[index];
@@ -213,5 +218,5 @@
     lines.push('',deliveryPayment,deliveryEstimate,'','¿Me confirman el precio final y los detalles del pedido?');
     return lines.join('\n');
   }
-  return {normalize,priceOf,createIndex,filterProducts,orderSummary,generalDefinitions,generalKey,versionLabel,teamSearchText,matchesSearch,changeLineSize,productUrl,classifyProduct,priceRule,patchSeason,patchOptions,validateOptions,restoreOptions,lineKey,addLine,linePrice,orderMessage,deliveryPayment,deliveryEstimate};
+  return {normalize,priceOf,createIndex,filterProducts,orderSummary,generalDefinitions,generalKey,effectiveVersion,versionLabel,teamSearchText,matchesSearch,changeLineSize,productUrl,classifyProduct,priceRule,patchSeason,patchOptions,validateOptions,restoreOptions,lineKey,addLine,linePrice,orderMessage,deliveryPayment,deliveryEstimate};
 });

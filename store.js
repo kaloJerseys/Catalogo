@@ -26,7 +26,7 @@
   let toastTimer;
   function toast(message) { $('#toast').textContent=message; $('#toast').classList.add('visible'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>$('#toast').classList.remove('visible'),2600); }
   if (!catalog?.products?.length) { $('#result-count').textContent='No se pudo cargar el catálogo.'; $('#products').innerHTML='<p>Escríbenos por WhatsApp para ayudarte a encontrar tu camiseta.</p>'; return; }
-  const products = [...manualProducts,...catalog.products];
+  const products = [...manualProducts,...catalog.products].map(p=>({...p,version:core.effectiveVersion(p)}));
   const byId = new Map(products.map(p=>[p.id,p]));
   const searchable = core.createIndex(products);
   bag = bag.filter(x=>byId.has(x.id) && Number.isInteger(x.quantity) && x.quantity>0 && typeof x.size==='string').map(x=>({...x,quantity:Math.min(x.quantity,99)}));
