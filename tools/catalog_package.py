@@ -3,6 +3,7 @@ from pathlib import Path, PurePosixPath
 from datetime import datetime
 import argparse, hashlib, json, re, shutil, tempfile
 from catalog_io import read_catalog, write_catalog
+from manual_catalog import read_manual_products, write_manual_index
 
 REQUIRED={'id','team','sport','category','audience','version','season','detail','sizes','image','original','name','teamStatus','seasonStatus'}
 CATEGORIES={'Camisetas','Conjuntos','Sudaderas','Chaquetas','Polos','Pantalones y shorts','Accesorios'}
@@ -72,6 +73,7 @@ def validate_package(folder,project):
     for p in candidate['products']:
         image=p['image'][2:]
         if not (payload/image).is_file() and not (project/image).is_file():raise ValueError('Portada ausente: '+p['id'])
+    read_manual_products(project)
     return manifest,candidate
 
 def build_site(project,folder,output):
@@ -83,6 +85,7 @@ def build_site(project,folder,output):
     shutil.copytree(project,output,ignore=ignore)
     shutil.copytree(Path(folder)/'payload',output,dirs_exist_ok=True)
     if not (output/'index.html').is_file():raise ValueError('Falta index.html en la raíz del sitio.')
+    write_manual_index(output)
     (output/'.nojekyll').touch()
     return output
 

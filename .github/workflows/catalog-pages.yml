@@ -2,9 +2,9 @@ name: Validar catálogo y publicar Kalo
 
 on:
   push:
-    paths: ['catalog-update-ready/**', '.github/workflows/catalog-pages.yml', 'tools/**', '*.js', '*.css', 'index.html', 'data/**', 'assets/**']
+    paths: ['catalog-update-ready/**', '.github/workflows/catalog-pages.yml', 'tools/**', '*.js', '*.css', 'index.html', 'data/**', 'assets/**', 'manual-products/**']
   pull_request:
-    paths: ['catalog-update-ready/**', '.github/workflows/catalog-pages.yml', 'tools/**', '*.js', '*.css', 'index.html', 'data/**', 'assets/**']
+    paths: ['catalog-update-ready/**', '.github/workflows/catalog-pages.yml', 'tools/**', '*.js', '*.css', 'index.html', 'data/**', 'assets/**', 'manual-products/**']
   workflow_dispatch:
 
 permissions:
@@ -38,6 +38,7 @@ jobs:
         run: python3 tools/catalog_package.py build --output "${{ runner.temp }}/kalo-pages"
       - name: Comprobar sintaxis JavaScript
         run: |
+          node --check manual-products.js
           node --check store.js
           node --check catalog-core.js
           node --check cupones.js
@@ -142,6 +143,12 @@ jobs:
         env:
           KALO_BUILD_DIR: ${{ runner.temp }}/kalo-pages
         run: node tools/verify_patch_rules.cjs
+      - name: Verificar polos y prendas manuales
+        env:
+          KALO_BUILD_DIR: ${{ runner.temp }}/kalo-pages
+        run: |
+          python3 -m unittest discover -s tools -p test_manual_catalog.py
+          node tools/verify_manual_products.cjs
       - name: Crear artefacto de Pages
         if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && steps.pages.outputs.build_type == 'workflow'
         uses: actions/upload-pages-artifact@v4

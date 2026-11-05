@@ -1,4 +1,4 @@
-(() => {
+(async () => {
   'use strict';
   const $ = (s, root = document) => root.querySelector(s);
   const $$ = (s, root = document) => [...root.querySelectorAll(s)];
@@ -10,6 +10,9 @@
   const settings = window.KALO_SETTINGS || {whatsapp:'50762809447',currency:'USD',locale:'es-PA'};
   const prices = window.KALO_PRICES || {categories:{},products:{}};
   const catalog = window.KALO_CATALOG;
+  const manualResult=window.KALO_MANUAL_READY?await window.KALO_MANUAL_READY:{products:[],error:'No se cargó manual-products.js.'};
+  const manualProducts=manualResult?.products||[];
+  if(manualResult?.error){const warning=document.createElement('p');warning.className='option-error';warning.setAttribute('role','alert');warning.textContent='No se pudieron cargar las prendas manuales. Recarga la página o consulta por WhatsApp.';$('#products').before(warning);console.error('Catálogo manual:',manualResult.error);}
   const money = value => new Intl.NumberFormat(settings.locale,{style:'currency',currency:settings.currency}).format(value);
   const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
   const save = (key, value) => { try { localStorage.setItem(key,JSON.stringify(value)); } catch {} };
@@ -17,25 +20,27 @@
   let favorites = new Set(Array.isArray(storedFavorites)?storedFavorites:[]);
   let bag = read('kalo-bag-v1',[]);
   if (!Array.isArray(bag)) bag=[];
+  const unavailableManualLines=manualResult?.error?bag.filter(line=>line&&typeof line.id==='string'&&line.id.startsWith('manual-')&&Number.isInteger(line.quantity)&&line.quantity>0):[];
   const state = {sport:'',q:'',category:'',team:'',audience:'',version:'',season:'',favorites:false,sort:'new',limit:36};
   const heart = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>';
   let toastTimer;
   function toast(message) { $('#toast').textContent=message; $('#toast').classList.add('visible'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>$('#toast').classList.remove('visible'),2600); }
   if (!catalog?.products?.length) { $('#result-count').textContent='No se pudo cargar el catálogo.'; $('#products').innerHTML='<p>Escríbenos por WhatsApp para ayudarte a encontrar tu camiseta.</p>'; return; }
-  const products = catalog.products;
+  const products = [...manualProducts,...catalog.products];
   const byId = new Map(products.map(p=>[p.id,p]));
   const searchable = core.createIndex(products);
   bag = bag.filter(x=>byId.has(x.id) && Number.isInteger(x.quantity) && x.quantity>0 && typeof x.size==='string').map(x=>({...x,quantity:Math.min(x.quantity,99)}));
-  bag=bag.map(line=>{const p=byId.get(line.id);return {...line,size:p.audience==='Mujer'&&line.size==='XXL'?'2XL':p.audience==='Adulto'&&line.size==='2XL'?'XXL':line.size};});
+  bag=bag.map(line=>{const p=byId.get(line.id);return {...line,size:p.source==='manual'?line.size:p.audience==='Mujer'&&line.size==='XXL'?'2XL':p.audience==='Adulto'&&!window.KaloSizes.isCoat(p,prices)&&line.size==='2XL'?'XXL':line.size};});
   let rejectedLines=0,removedSavedPatches=0;
   bag=bag.flatMap(line=>{try{const p=byId.get(line.id),options=core.classifyProduct(p,prices).trainingSet?{...line,personalization:null,patches:[]}:line;const restored=core.restoreOptions(p,options,prices);removedSavedPatches+=restored.removedPatches;return [{id:line.id,size:line.size,quantity:line.quantity,...restored.options}];}catch{rejectedLines++;return [];}});
   function priceOf(p) { return core.priceOf(p,prices); }
   function priceHTML(p) { const v=priceOf(p); return `<span class="price${v===null?' consult':''}">${v===null?'Consultar precio':esc(money(v))}</span>`; }
-  function sourceOf(p) { return `https://nn88.x.yupoo.com/albums/${p.id}?uid=1`; }
+  function sourceOf(p) { if(p.source==='manual')return wa('¡Hola, Kalo! Quiero más fotos de '+p.name+'. Ref. '+p.id);return `https://nn88.x.yupoo.com/albums/${p.id}?uid=1`; }
   function wa(message) { return `https://wa.me/${settings.whatsapp.replace(/\D/g,'')}?text=${encodeURIComponent(message)}`; }
   $$('[data-contact]').forEach(a=>a.href=wa('¡Hola, Kalo! Quiero información sobre sus camisetas.'));
   $('#year').textContent=new Date().getFullYear();
-  $('#general-price-cards').innerHTML=['Fútbol','NBA'].map(sport=>`<div><h3>${sport}</h3><dl>${core.generalDefinitions.filter(rule=>rule.sport===sport).map(rule=>`<div><dt>${esc(rule.label)}</dt><dd>${typeof prices.general?.[rule.key]==='number'?esc(money(prices.general[rule.key])):'Consultar'}</dd></div>`).join('')}</dl></div>`).join('');
+  $('#general-price-cards').innerHTML=[...new Set(core.generalDefinitions.map(rule=>rule.sport))].map(sport=>`<div><h3>${sport}</h3><dl>${core.generalDefinitions.filter(rule=>rule.sport===sport).map(rule=>`<div><dt>${esc(rule.label)}</dt><dd>${typeof prices[rule.section||'general']?.[rule.key]==='number'?esc(money(prices[rule.section||'general'][rule.key])):'Consultar'}</dd></div>`).join('')}</dl></div>`).join('');
+  $('#general-price-cards').insertAdjacentHTML('beforeend',`<div><h3>Personalización y parches</h3><dl><div><dt>Nombre y dorsal · prendas compatibles</dt><dd>Gratis</dd></div>${Object.values(prices.patches||{}).map(patch=>`<div><dt>${esc(patch.label)} · por unidad</dt><dd>${typeof patch.price==='number'?esc(money(patch.price)):'Consultar'}</dd></div>`).join('')}</dl></div>`);
   const nbaSet=$$('#general-price-cards dt').find(label=>label.textContent==='Conjunto (suéter + short)');
   if(nbaSet){const link=document.createElement('a');link.href=wa('¡Hola, Kalo! Quiero un conjunto NBA (suéter + short). ¿Me ayudan a elegir el equipo y las tallas?');link.target='_blank';link.rel='noopener noreferrer';link.textContent='Conjunto (suéter + short) ↗';nbaSet.replaceChildren(link);}
   function populate(select, values, placeholder,reverse=false) { select.innerHTML=`<option value="">${placeholder}</option>`+[...new Set(values.filter(Boolean))].sort((a,b)=>(reverse?-1:1)*a.localeCompare(b,'es',{numeric:true})).map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join(''); }
@@ -98,9 +103,9 @@
     const sizes=window.KaloSizes.sizesFor(p,prices);
     const canPersonalize=core.classifyProduct(p,prices).personalizable,patches=core.patchOptions(p,prices);
     $('#product-detail').innerHTML=`<div class="modal-image"><img src="${esc(p.image)}" alt="${esc(p.name+' · '+p.detail)}" referrerpolicy="no-referrer"></div><div class="modal-info">
-      <p class="eyebrow">${esc(p.sport)} · ${esc(p.category)}</p><h2 id="product-title">${esc(p.name)}</h2><p class="detail">${esc(p.detail)}</p><p class="detail">${esc(p.audience)} · Versión ${esc(core.versionLabel(p))}</p>${priceHTML(p)}
+      <p class="eyebrow">${esc(p.sport)} · ${esc(p.category)}</p><h2 id="product-title">${esc(p.name)}</h2><p class="detail">${esc(p.detail)}</p><p class="detail">${esc(p.audience)} · Versión ${esc(core.versionLabel(p))}</p>${priceHTML(p)}${p.source==='manual'?`<p class="detail">${esc(p.description)}</p>`:''}
       <form id="product-options" novalidate>
-        <div class="size-heading"><p class="size-label">Elige tu talla</p><button type="button" class="size-guide-link" data-size-guide data-product-id="${p.id}">Guía de tallas ↗</button></div>
+        <div class="size-heading"><p class="size-label">Elige tu talla</p><button type="button" class="size-guide-link" data-size-guide data-product-id="${esc(p.id)}">Guía de tallas ↗</button></div>
         <div class="sizes" role="group" aria-label="Talla">${sizes.map(s=>`<button type="button" data-size="${esc(s)}" aria-pressed="false">${esc(s)}</button>`).join('')}</div>
         <p class="size-note">${p.audience!=='Infantil'&&p.category!=='Accesorios'?'Consulta la guía de medidas y confirma la disponibilidad de la talla antes de encargar.':'Elige una de las tallas indicadas para este producto.'}</p>
         ${canPersonalize?`<div class="customization-options"><label class="option-check"><input id="personalize" type="checkbox" checked>Personalizar nombre y dorsal (GRATIS)</label><div id="personalization-fields" class="personalization-fields"><label for="jersey-number">Número de dorsal<input id="jersey-number" name="number" type="text" inputmode="numeric" pattern="[0-9]{1,3}" maxlength="3" autocomplete="off" required></label><label for="jersey-name">Nombre para la camiseta<input id="jersey-name" name="name" type="text" maxlength="40" autocomplete="off" autocapitalize="characters" required></label></div></div>`:''}
@@ -126,7 +131,7 @@
   $('#product-dialog').addEventListener('close',()=>{selectedProduct=null;const url=new URL(location.href);url.searchParams.delete('producto');try{history.replaceState(null,'',url.href);}catch{}});
   $$('[data-close]').forEach(b=>b.addEventListener('click',()=>$('#'+b.dataset.close).close()));
   $$('dialog').forEach(dialog=>dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}}));
-  function persistBag(){save('kalo-bag-v1',bag);save('kalo-coupons-v1',activeCoupons);const count=bag.reduce((s,x)=>s+x.quantity,0);$('#bag-count').textContent=count;$('#floating-count').textContent=count;$('#floating-bag').hidden=!count;}
+  function persistBag(){save('kalo-bag-v1',[...bag,...unavailableManualLines]);save('kalo-coupons-v1',activeCoupons);const count=[...bag,...unavailableManualLines].reduce((s,x)=>s+x.quantity,0);$('#bag-count').textContent=count;$('#floating-count').textContent=count;$('#floating-bag').hidden=!count;}
   function couponHTML(quote){
     if(!coupons)return '';
     const context=activeCoupons.length?(quote.hasPendingDiscount?'Hay precios pendientes; los descuentos y el total final se confirmarán por WhatsApp.':quote.discountCents===0?'El código sigue activo; ahora no hay artículos con descuento.':''):'';
@@ -138,10 +143,11 @@
     $('#bag-items').innerHTML=bag.length?bag.map((x,i)=>{const p=byId.get(x.id),adjusted=quote?.lines[i],cost=adjusted?.cost||core.linePrice(p,x,prices),sizes=[...new Set([...window.KaloSizes.sizesFor(p,prices),x.size])];return `<div class="bag-line"><img src="${esc(p.image)}" alt="" referrerpolicy="no-referrer"><div><h3>${esc(p.name)}</h3><p>${esc(p.detail)}</p><label class="bag-size-label">Talla<select data-bag-size="${i}" aria-label="Talla de ${esc(p.name)}">${sizes.map(size=>`<option value="${esc(size)}"${size===x.size?' selected':''}>${esc(size)}</option>`).join('')}</select></label><div class="bag-options">${x.personalization?`<p>Personalización: Sí (GRATIS)</p><p>Nombre: <strong>${esc(x.personalization.name)}</strong> · Dorsal: <strong>${esc(x.personalization.number)}</strong></p>`:'<p>Sin personalización</p>'}${cost.patches.map(patch=>`<p>${esc(patch.label)}: +${esc(money(patch.price))} por unidad</p>`).join('')}</div><p>Precio base: ${cost.base===null?'Por confirmar':esc(money(cost.base))}</p><p class="bag-unit-price">Precio unitario: <strong>${cost.unit===null?'Por confirmar':esc(money(cost.unit))}</strong></p>${cost.unit===null?'':`<p>Subtotal: <strong>${esc(money(Math.round(cost.unit*100)*x.quantity/100))}</strong></p>`}${adjusted?.discountCents?`<p class="coupon-line-discount">${adjusted.discounts.filter(d=>!d.pending).map(d=>`${esc(d.code)}: −${d.percent}% sobre la camiseta · −${esc(money(d.totalCents/100))}`).join('<br>')}</p><p class="coupon-line-discount">Con descuento: <strong>${esc(money(adjusted.unitAfterCents/100))} c/u</strong> · ${esc(money(adjusted.totalAfterCents/100))} en esta línea</p>`:''}<button class="remove" data-remove="${i}">Quitar</button></div><div class="quantity"><button data-quantity="${i}" data-delta="-1" aria-label="Reducir cantidad de ${esc(p.name)}">−</button><span>${x.quantity}</span><button data-quantity="${i}" data-delta="1" aria-label="Aumentar cantidad de ${esc(p.name)}" ${x.quantity>=99?'disabled':''}>+</button></div></div>`;}).join(''):'<div class="bag-empty"><p>Tu próximo fichaje te está esperando.</p><button class="button button-outline" data-continue>Explorar catálogo ↗</button></div>';
     wireImageErrors($('#bag-items'));
     const summary=quote?.original||core.orderSummary(bag,byId,prices);const known=quote?quote.totalCents/100:summary.subtotal;const unknown=summary.unknown>0;
-    const message=core.orderMessage(bag,byId,prices,money,quote);
+    const message=core.orderMessage(bag,byId,prices,money,quote,location.href);
     const allUnknown=bag.length&&bag.every(x=>priceOf(byId.get(x.id))===null);
     const couponTotals=quote?.codes.length?`<div class="coupon-totals"><div><span>${unknown?'Subtotal original conocido':'Subtotal original'}</span><strong>${esc(money(summary.subtotal))}</strong></div>${quote.lineDiscountCents?`<div class="coupon-discount"><span>Descuento en camisetas</span><strong>−${esc(money(quote.lineDiscountCents/100))}</strong></div>`:''}${quote.orderDiscounts.map(d=>`<div class="coupon-discount"><span>Descuento ${esc(d.code)} por pedido</span><strong>${d.pending?'Por confirmar':'−'+esc(money(d.amountCents/100))}</strong></div>`).join('')}</div>`:'';
     $('#bag-summary').innerHTML=bag.length?`${couponHTML(quote)}${couponTotals}<div class="bag-total"><strong>${allUnknown?'Total':unknown?'Subtotal conocido'+(activeCoupons.length?' tras descuentos':''):activeCoupons.length?'Total de productos':'Subtotal'}</strong><strong>${allUnknown?'Por confirmar':money(known)}</strong></div><p class="bag-disclaimer">${unknown?'Hay prendas con precio por confirmar. ':''}${esc(core.deliveryPayment)} ${esc(core.deliveryEstimate)}</p><a id="send-order" class="button button-dark" href="${wa(message)}" target="_blank" rel="noopener noreferrer">Enviar pedido por WhatsApp ↗</a><button class="text-button" data-continue style="display:block;margin:15px auto 0">Seguir explorando</button>`:couponHTML(quote);
+    if(unavailableManualLines.length){const warning='<p class="option-error" role="alert">Algunas prendas de tu pedido no se pudieron cargar. Tu selección sigue guardada. Recarga la página antes de enviar el pedido.</p>';if(bag.length)$('#bag-items').insertAdjacentHTML('afterbegin',warning);else $('#bag-items').innerHTML=warning;$('#send-order')?.remove();}
   }
   $('#bag-dialog').addEventListener('input',e=>{if(e.target.id==='coupon-code'){couponDraft=e.target.value;couponFeedback='';couponError=false;$('#coupon-feedback').textContent='';}});
   $('#bag-dialog').addEventListener('submit',e=>{if(e.target.id!=='coupon-form'||!coupons)return;e.preventDefault();const result=coupons.validate(couponDraft,bag,byId,prices,activeCoupons);couponFeedback=result.message;couponError=!result.ok;if(result.ok){activeCoupons=result.codes;couponDraft='';persistBag();}renderBag();$('#coupon-code').focus({preventScroll:true});});

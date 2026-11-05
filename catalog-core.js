@@ -42,9 +42,23 @@
     {key:'football_fan',sport:'Fútbol',label:'Versión Fan / Aficionado'},
     {key:'football_player',sport:'Fútbol',label:'Versión Jugador'},
     {key:'football_retro',sport:'Fútbol',label:'Versión Retro'},
+    {key:'football_set',sport:'Fútbol',label:'Conjunto / entrenamiento'},
     {key:'nba_jersey',sport:'NBA',label:'Suéter (jersey)'},
     {key:'nba_shorts',sport:'NBA',label:'Short'},
-    {key:'nba_set',sport:'NBA',label:'Conjunto (suéter + short)'}
+    {key:'nba_set',sport:'NBA',label:'Conjunto (suéter + short)'},
+    {key:'f1_base',sport:'F1 y NFL',label:'F1 · prendas base'},
+    {key:'nfl_base',sport:'F1 y NFL',label:'NFL · prendas base'},
+    {key:'polo_regular',section:'garments',sport:'Polos',label:'Polo regular'},
+    {key:'polo_retro',section:'garments',sport:'Polos',label:'Polo Retro'},
+    {key:'long_sleeve_jersey',section:'garments',sport:'Otras prendas',label:'Camiseta de manga larga'},
+    {key:'jacket',section:'garments',sport:'Otras prendas',label:'Chaqueta / abrigo'},
+    {key:'reversible_windbreaker',section:'garments',sport:'Otras prendas',label:'Rompevientos reversible'},
+    {key:'cotton_hoodie',section:'garments',sport:'Otras prendas',label:'Sudadera de algodón con capucha'},
+    {key:'jacket_pants_set',section:'garments',sport:'Otras prendas',label:'Conjunto de chaqueta + pantalón'},
+    {key:'hoodie_material',section:'pending',sport:'Por confirmar',label:'Sudadera sin tarifa confirmada'},
+    {key:'Accesorios',section:'categories',sport:'Por confirmar',label:'Accesorios'},
+    {key:'Pantalones y shorts',section:'categories',sport:'Por confirmar',label:'Otros pantalones y shorts'},
+    {key:'Camisetas',section:'categories',sport:'Por confirmar',label:'Otras camisetas sin tarifa asignada'}
   ];
   function versionLabel(p){return p.version==='Estándar'&&p.sport==='Fútbol'?'Fan / Aficionado':p.version;}
   function generalKey(p){
@@ -91,6 +105,7 @@
   function priceRule(p,prices={}){
     const a=classifyProduct(p,prices);
     if(a.garment&&Object.hasOwn(prices.garments||{},a.garment))return {section:'garments',key:a.garment};
+    if(a.polo)return {section:'garments',key:p.version==='Retro'?'polo_retro':'polo_regular'};
     if(a.jacketSet)return {section:'garments',key:'jacket_pants_set'};
     if(a.jacket&&/\breversible\b|\bdouble sided\b|\btwo sided\b/.test(normalize(p.original)))return {section:'garments',key:'reversible_windbreaker'};
     if(a.jacket)return {section:'garments',key:'jacket'};
@@ -105,8 +120,8 @@
   }
   function priceOf(product,prices){
     const rule=priceRule(product,prices);
-    if(!Object.hasOwn(prices.products||{},product.id)&&rule?.section==='pending')return null;
-    const n=Object.hasOwn(prices.products||{},product.id)?prices.products[product.id]:rule&&Object.hasOwn(prices[rule.section]||{},rule.key)?prices[rule.section][rule.key]:prices.categories?.[product.category];
+    if(product.source!=='manual'&&!Object.hasOwn(prices.products||{},product.id)&&rule?.section==='pending')return null;
+    const n=Object.hasOwn(prices.products||{},product.id)?prices.products[product.id]:product.source==='manual'?product.manualPrice:rule&&Object.hasOwn(prices[rule.section]||{},rule.key)?prices[rule.section][rule.key]:prices.categories?.[product.category];
     return validPrice(n)?n:null;
   }
   function patchSeason(product){
@@ -170,7 +185,7 @@
   }
   function productUrl(base,id){const url=new URL(base);url.search='';url.hash='';url.searchParams.set('producto',String(id));return url.href;}
   function orderSummary(bag,products,prices){let subtotal=0,unknown=0,count=0;for(const line of bag){const p=products.get(line.id);if(!p)continue;const n=linePrice(p,line,prices).unit;count+=line.quantity;if(n===null)unknown+=line.quantity;else subtotal+=Math.round(n*100)*line.quantity;}return {subtotal:subtotal/100,unknown,count};}
-  function orderMessage(bag,products,prices,money=n=>new Intl.NumberFormat('es-PA',{style:'currency',currency:'USD'}).format(n),quote=null){
+  function orderMessage(bag,products,prices,money=n=>new Intl.NumberFormat('es-PA',{style:'currency',currency:'USD'}).format(n),quote=null,catalogBase=null){
     const lines=['¡Hola, Kalo! Me interesan estos productos:'];
     bag.forEach((line,i)=>{const p=products.get(line.id);if(!p)return;const options=validateOptions(p,line,prices),adjusted=quote?.lines[i],cost=adjusted?.cost||linePrice(p,line,prices);
       lines.push('',`${i+1}. ${p.name}`,p.detail,`Talla: ${line.size} · Cantidad: ${line.quantity}`,`Ref. ${p.id}`,cost.base===null?'Precio base: por confirmar':`Precio base: ${money(cost.base)} c/u`);
@@ -182,7 +197,8 @@
         for(const discount of adjusted?.discounts||[])lines.push(discount.pending?`Descuento ${discount.code}: -${discount.percent} % sobre la camiseta, por confirmar al conocer su precio`:`Descuento ${discount.code}: -${discount.percent} % sobre la camiseta (${money(discount.perUnitCents/100)} c/u; ${money(discount.totalCents/100)} en esta línea)`);
         if(adjusted?.unitAfterCents!==null&&adjusted?.unitAfterCents!==undefined)lines.push(`${adjusted.discountCents?'Precio con descuento':'Precio final por unidad'}: ${money(adjusted.unitAfterCents/100)} c/u${cost.patches.length?' (parches sin descuento por producto)':''}`,`Subtotal actualizado de esta línea: ${money(adjusted.totalAfterCents/100)}`);
       }
-      lines.push('Link del producto: https://nn88.x.yupoo.com/albums/'+encodeURIComponent(p.id)+'?uid=1');
+      if(p.source==='manual'){lines.push('Producto de colección manual · sin álbum del proveedor.');if(catalogBase)lines.push('Link del producto: '+productUrl(catalogBase,p.id));}
+      else lines.push('Link del producto: https://nn88.x.yupoo.com/albums/'+encodeURIComponent(p.id)+'?uid=1');
     });
     const summary=quote?.original||orderSummary(bag,products,prices);
     lines.push('',`${quote?.codes.length?(summary.unknown?'Subtotal original conocido':'Subtotal original'):(summary.unknown?'Subtotal conocido':'Subtotal de productos')}: ${money(summary.subtotal)}`);

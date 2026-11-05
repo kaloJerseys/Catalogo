@@ -1,0 +1,25 @@
+{
+  "id": "manual-red-bull-infiniti",
+  "name": "Chaqueta Red Bull Racing Infiniti F1 · estilo vintage",
+  "team": "Red Bull Racing",
+  "sport": "F1",
+  "category": "Chaquetas",
+  "audience": "Adulto",
+  "version": "Retro",
+  "season": "Sin temporada",
+  "seasonStatus": "unclassified",
+  "teamStatus": "confirmed",
+  "detail": "Adulto unisex · Azul marino oscuro · Chaqueta sola · Temporada por confirmar",
+  "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL"
+  ],
+  "image": "./manual-products/manual-red-bull-infiniti/frente.png",
+  "original": "Red Bull Racing Infiniti F1 vintage jacket",
+  "source": "manual",
+  "manualPrice": 60,
+  "description": "Poliéster/nylon. Cuello alto, cremallera frontal completa y bolsillos. Mangas largas, puños y cintura elásticos. Diseño con logotipos y patrocinadores Red Bull, Infiniti, Geox, Total, Rauch, Casio, Pirelli y Pepe Jeans. Forro y temporada por confirmar. Sin capucha."
+}

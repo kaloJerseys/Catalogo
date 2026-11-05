@@ -1,5 +1,5 @@
 // Archivo principal para editar los precios manualmente desde GitHub (USD).
-// Prioridad: products > tipo de prenda > deporte/versión > categories.
+// Prioridad: products > precio de ficha manual > tipo de prenda > deporte/versión > categories.
 // products permite excepciones por referencia; null mantiene «Consultar precio».
 // productAttributes solo debe contener atributos comprobados en el catálogo o con el proveedor.
 // null significa «Consultar precio». Los valores se expresan en dólares (USD).
@@ -16,6 +16,8 @@ window.KALO_PRICES = {
     "nfl_base": 50
   },
   "garments": {
+    "polo_regular": 35,
+    "polo_retro": 40,
     "long_sleeve_jersey": 45,
     "jacket": 60,
     "reversible_windbreaker": 65,

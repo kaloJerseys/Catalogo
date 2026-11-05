@@ -11,6 +11,7 @@
   function isCoat(p,prices={}){return prices.productAttributes?.[p.id]?.garment==='jacket_pants_set'|| ['Chaquetas','Sudaderas'].includes(p.category)||/\b(?:jackets?|coats?|hoodies?)\b/i.test(p.original||'');}
   function guideId(p,prices){if(isCoat(p,prices))return p.audience==='Infantil'?'kidsCoat':'coat';if(p.audience==='Infantil')return 'kids';if(p.audience==='Mujer')return 'women';return p.version==='Jugador'?'player':'fan';}
   function sizesFor(p,prices){
+    if(p.source==='manual')return [...(p.sizes||[])];
     if(p.category==='Accesorios')return p.sizes?.length?[...p.sizes]:['Consultar talla'];
     const guide=guides[guideId(p,prices)];
     if(['kids','kidsCoat','coat'].includes(guide.id))return p.sizes?.length?[...p.sizes]:[...guide.sizes];
@@ -19,11 +20,12 @@
   }
   function contextNote(p,prices){
     if(!p)return '';
+    if(p.source==='manual')return 'Tallas confirmadas para este modelo. No se proporcionó una tabla específica: las medidas generales son solo una referencia; confirma el ajuste por WhatsApp.';
     if(isCoat(p,prices))return 'Tabla de abrigos del proveedor. Confirma las medidas del modelo antes de pedir.';
     if(p.audience==='Infantil')return 'Los números 16–28 corresponden a las tallas XXS–2XL de jersey infantil; no son tallas de abrigo.';
     if(p.sport!=='Fútbol'||p.category!=='Camisetas')return 'Estas son las tablas de camisetas facilitadas por el proveedor. No se proporcionó una tabla específica para este deporte o tipo de prenda; consulta su ajuste por WhatsApp.';
     if(p.version==='Retro'&&p.audience!=='Mujer')return 'No se proporcionó una tabla específica de Retro. La tabla de Aficionado se muestra como referencia; consulta las medidas del modelo.';
     return '';
   }
-  return {guides,guideId,sizesFor,contextNote};
+  return {guides,isCoat,guideId,sizesFor,contextNote};
 });
