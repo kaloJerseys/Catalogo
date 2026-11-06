@@ -26,7 +26,7 @@
   let toastTimer;
   function toast(message) { $('#toast').textContent=message; $('#toast').classList.add('visible'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>$('#toast').classList.remove('visible'),2600); }
   if (!catalog?.products?.length) { $('#result-count').textContent='No se pudo cargar el catálogo.'; $('#products').innerHTML='<p>Escríbenos por WhatsApp para ayudarte a encontrar tu camiseta.</p>'; return; }
-  const products = [...manualProducts,...catalog.products].map(p=>({...p,version:core.effectiveVersion(p)}));
+  const products = [...manualProducts,...catalog.products].map(core.displayProduct);
   const byId = new Map(products.map(p=>[p.id,p]));
   const searchable = core.createIndex(products);
   bag = bag.filter(x=>byId.has(x.id) && Number.isInteger(x.quantity) && x.quantity>0 && typeof x.size==='string').map(x=>({...x,quantity:Math.min(x.quantity,99)}));
@@ -59,6 +59,7 @@
   $('#team-search')?.addEventListener('input',updateTeams);
   const allowed = {sport:[...new Set(products.map(p=>p.sport))],category:[...new Set(products.map(p=>p.category))],team:[...new Set(products.map(p=>p.team))],audience:['Adulto','Mujer','Infantil'],version:['Estándar','Jugador','Retro'],season:[...new Set(products.map(p=>p.season))],sort:['new','name','price-low','price-high']};
   const params=new URLSearchParams(location.search);
+  if(params.get('category')==='Chaquetas')params.set('category','Abrigos');
   for (const key of Object.keys(allowed)) { const v=params.get(key); if(allowed[key].includes(v)) state[key]=v; }
   state.q=(params.get('q')||'').slice(0,200); state.favorites=params.get('favorites')==='1';
   $('#search').value=state.q; $('#favorites-only').checked=state.favorites;

@@ -43,6 +43,20 @@ async function load(overrides={}){
   assert.equal(core.filterProducts([dated],{...state,version:'Estándar'},prices,new Set(),datedIndex).length,0);
   for(const [key,value] of Object.entries(prices.general))assert(core.generalDefinitions.some(d=>d.key===key&&(d.section||'general')==='general'),key);
   for(const key of Object.keys(prices.garments))assert(core.generalDefinitions.some(d=>d.key===key&&d.section==='garments'),key);
+  for(const raw of [...products,...actual.products]){
+    const shown=core.displayProduct(raw);
+    assert(!/\bchaquetas?\b/i.test([shown.name,shown.detail,shown.category,shown.description].join(' ')),raw.id);
+    assert.equal(core.priceOf(shown,prices),core.priceOf(raw,prices),raw.id);
+    if(raw.category==='Chaquetas'){assert.equal(shown.category,'Abrigos');assert.equal(sizes.isCoat(shown,prices),true);assert.deepEqual(sizes.sizesFor(shown,prices),sizes.sizesFor(raw,prices));}
+  }
+  assert(core.generalDefinitions.every(d=>!/chaqueta/i.test(d.label)));
+  const manualShown=core.displayProduct(jacket);
+  const renamedMessage=core.orderMessage(bag,new Map([[jacket.id,manualShown]]),prices,n=>'$'+n.toFixed(2));
+  assert(!/chaqueta/i.test(renamedMessage));assert(renamedMessage.includes('Abrigo'));
+  const displayed=products.map(core.displayProduct),displayIndex=core.createIndex(displayed);
+  const coats=core.filterProducts(displayed,{...state,version:'',category:'Abrigos'},prices,new Set(),displayIndex);
+  assert.equal(coats.length,products.filter(p=>p.category==='Chaquetas'||p.category==='Abrigos').length);
+  assert(coats.length>0);assert(coats.every(p=>core.matchesSearch(displayIndex.get(p.id),'abrigo')));
   const target='./manual-products/'+jacket.id+'/product.json';
   const removed=await loadFixture({[target]:{status:404,ok:false}});assert.equal(removed.error,null);assert.equal(removed.products.length,loaded.products.length-1);
   for(const mutation of [{manualPrice:-1},{manualPrice:true},{image:'https://example.com/evil.svg'},{sizes:[]},{id:'123'}]){
@@ -50,5 +64,5 @@ async function load(overrides={}){
   }
   const unavailable=await loadFixture({[target]:{status:500,ok:false}});assert(unavailable.error);
   const malformed=await load({'./manual-products/index.json':{status:200,ok:true,json:async()=>({formatVersion:1,products:['../escape']})}});assert(malformed.error);
-  console.log(`OK: ${polos} polos reales a $35/$40; chaqueta $60; tallas y WhatsApp; altas/bajas manuales; rechazo de fichas inválidas; resumen de todas las tarifas.`);
+  console.log(`OK: ${polos} polos reales a $35/$40; abrigo $60; tallas y WhatsApp; altas/bajas manuales; rechazo de fichas inválidas; resumen de todas las tarifas.`);
 })().catch(error=>{console.error(error);process.exitCode=1;});

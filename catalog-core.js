@@ -30,11 +30,16 @@
   for(const names of teamNames){const text=normalize(names.join(' '));for(const name of names)teamAliases.set(normalize(name),text);}
   function teamSearchText(team){return teamAliases.get(normalize(team))||normalize(team);}
   function matchesSearch(text,query){return normalize(query).split(/\s+/).filter(Boolean).every(word=>text.includes(word));}
+  function garmentText(value){
+    return String(value??'').replace(/\bchaqueta(s)?\b/gi,(word,plural)=>{const label=plural?'abrigos':'abrigo';return word===word.toUpperCase()?label.toUpperCase():/^[A-Z]/.test(word)?label[0].toUpperCase()+label.slice(1):label;});
+  }
+  // La fuente conserva sus categorías originales; la tienda usa el nombre comercial.
+  function displayProduct(p){return {...p,category:p.category==='Chaquetas'?'Abrigos':p.category,name:garmentText(p.name),detail:garmentText(p.detail),description:garmentText(p.description),version:effectiveVersion(p)};}
   function garmentAliases(p){
     if(p.category==='Camisetas')return 'camiseta camisetas jersey jerseys sueter sueteres shirt shirts';
     if(p.category==='Conjuntos')return 'conjunto conjuntos kit kits set traje';
     if(p.category==='Sudaderas')return 'sudadera sudaderas hoodie sweatshirt';
-    if(p.category==='Chaquetas')return 'chaqueta chaquetas jacket windbreaker cortaviento';
+    if(['Chaquetas','Abrigos'].includes(p.category))return 'abrigo abrigos chaqueta chaquetas jacket windbreaker cortaviento';
     if(p.category==='Pantalones y shorts')return /\bshorts?\b/.test(normalize(p.original))?'short shorts pantalon corto pantalones cortos':'pantalon pantalones pants trousers';
     return '';
   }
@@ -51,10 +56,10 @@
     {key:'polo_regular',section:'garments',sport:'Polos',label:'Polo regular · 2023 en adelante'},
     {key:'polo_retro',section:'garments',sport:'Polos',label:'Polo Retro · hasta 2022 / edición Retro'},
     {key:'long_sleeve_jersey',section:'garments',sport:'Otras prendas',label:'Camiseta de manga larga'},
-    {key:'jacket',section:'garments',sport:'Otras prendas',label:'Chaqueta / abrigo'},
+    {key:'jacket',section:'garments',sport:'Otras prendas',label:'Abrigo'},
     {key:'reversible_windbreaker',section:'garments',sport:'Otras prendas',label:'Rompevientos reversible'},
     {key:'cotton_hoodie',section:'garments',sport:'Otras prendas',label:'Sudadera de algodón con capucha'},
-    {key:'jacket_pants_set',section:'garments',sport:'Otras prendas',label:'Conjunto de chaqueta + pantalón'},
+    {key:'jacket_pants_set',section:'garments',sport:'Otras prendas',label:'Conjunto de abrigo + pantalón'},
     {key:'hoodie_material',section:'pending',sport:'Por confirmar',label:'Sudadera sin tarifa confirmada'},
     {key:'Accesorios',section:'categories',sport:'Por confirmar',label:'Accesorios'},
     {key:'Pantalones y shorts',section:'categories',sport:'Por confirmar',label:'Otros pantalones y shorts'},
@@ -88,7 +93,7 @@
     const pants=p.category==='Pantalones y shorts'||/\b(?:shorts|pants?|trousers?)\b/.test(text);
     const polo=p.category==='Polos'||/\bpolo\b/.test(text);
     const set=p.category==='Conjuntos'||/\b(?:suits?|sets?|tracksuits?)\b|\btrack suit\b|\bkids? kits?\b/.test(text);
-    const jacket=!accessory&&(/\b(?:jackets?|jakcet|windbreakers?|winbreaker|werindbreaker|coats?)\b|\breversible breaker\b/.test(text)||p.category==='Chaquetas');
+    const jacket=!accessory&&(/\b(?:jackets?|jakcet|windbreakers?|winbreaker|werindbreaker|coats?)\b|\breversible breaker\b/.test(text)||['Chaquetas','Abrigos'].includes(p.category));
     const hoodie=!jacket&&!accessory&&/\bhoodies?\b|\bhooded sweatshirt\b|sudadera con capucha|连帽卫衣/.test(text);
     const cotton=/\bcotton\b|\balgodon\b|纯棉|棉质/.test(text+' '+material)&&!/\b(?:not|non|sin) (?:cotton|algodon)\b/.test(text+' '+material);
     const jacketSet=!accessory&&jacket&&(set||pants);
@@ -126,7 +131,7 @@
   function priceOf(product,prices){
     const rule=priceRule(product,prices);
     if(product.source!=='manual'&&!Object.hasOwn(prices.products||{},product.id)&&rule?.section==='pending')return null;
-    const n=Object.hasOwn(prices.products||{},product.id)?prices.products[product.id]:product.source==='manual'?product.manualPrice:rule&&Object.hasOwn(prices[rule.section]||{},rule.key)?prices[rule.section][rule.key]:prices.categories?.[product.category];
+    const n=Object.hasOwn(prices.products||{},product.id)?prices.products[product.id]:product.source==='manual'?product.manualPrice:rule&&Object.hasOwn(prices[rule.section]||{},rule.key)?prices[rule.section][rule.key]:prices.categories?.[Object.hasOwn(prices.categories||{},product.category)?product.category:product.category==='Abrigos'?'Chaquetas':product.category];
     return validPrice(n)?n:null;
   }
   function patchSeason(product){
@@ -192,7 +197,7 @@
   function orderSummary(bag,products,prices){let subtotal=0,unknown=0,count=0;for(const line of bag){const p=products.get(line.id);if(!p)continue;const n=linePrice(p,line,prices).unit;count+=line.quantity;if(n===null)unknown+=line.quantity;else subtotal+=Math.round(n*100)*line.quantity;}return {subtotal:subtotal/100,unknown,count};}
   function orderMessage(bag,products,prices,money=n=>new Intl.NumberFormat('es-PA',{style:'currency',currency:'USD'}).format(n),quote=null,catalogBase=null){
     const lines=['¡Hola, Kalo! Me interesan estos productos:'];
-    bag.forEach((line,i)=>{const p=products.get(line.id);if(!p)return;const options=validateOptions(p,line,prices),adjusted=quote?.lines[i],cost=adjusted?.cost||linePrice(p,line,prices);
+    bag.forEach((line,i)=>{const raw=products.get(line.id);if(!raw)return;const p=displayProduct(raw);const options=validateOptions(p,line,prices),adjusted=quote?.lines[i],cost=adjusted?.cost||linePrice(p,line,prices);
       lines.push('',`${i+1}. ${p.name}`,p.detail,`Talla: ${line.size} · Cantidad: ${line.quantity}`,`Ref. ${p.id}`,cost.base===null?'Precio base: por confirmar':`Precio base: ${money(cost.base)} c/u`);
       if(options.personalization)lines.push('Personalización: Sí (GRATIS)',`Nombre: ${options.personalization.name}`,`Dorsal: ${options.personalization.number}`);else lines.push('Sin personalización');
       for(const patch of cost.patches)lines.push(`${patch.label}: ${money(patch.price)} por unidad`);
@@ -218,5 +223,5 @@
     lines.push('',deliveryPayment,deliveryEstimate,'','¿Me confirman el precio final y los detalles del pedido?');
     return lines.join('\n');
   }
-  return {normalize,priceOf,createIndex,filterProducts,orderSummary,generalDefinitions,generalKey,effectiveVersion,versionLabel,teamSearchText,matchesSearch,changeLineSize,productUrl,classifyProduct,priceRule,patchSeason,patchOptions,validateOptions,restoreOptions,lineKey,addLine,linePrice,orderMessage,deliveryPayment,deliveryEstimate};
+  return {normalize,garmentText,displayProduct,priceOf,createIndex,filterProducts,orderSummary,generalDefinitions,generalKey,effectiveVersion,versionLabel,teamSearchText,matchesSearch,changeLineSize,productUrl,classifyProduct,priceRule,patchSeason,patchOptions,validateOptions,restoreOptions,lineKey,addLine,linePrice,orderMessage,deliveryPayment,deliveryEstimate};
 });
