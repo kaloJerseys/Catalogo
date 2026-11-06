@@ -31,5 +31,5 @@ for(const [id,team,equipment] of [['240112972','Real Madrid','Tercera equipació
 }
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8'),store=fs.readFileSync(path.join(root,'store.js'),'utf8');
 assert(html.includes('featured.css'));assert(html.indexOf('data/featured.js')<html.indexOf('./store.js'));
-assert(store.includes('most-requested-tag'));assert(store.includes('most-requested-inline'));assert(store.includes('Más pedidos'));
+assert(store.includes('most-requested-tag'));assert(store.includes('most-requested-inline'));assert(store.includes('Más Vendidos'));
 console.log(`OK: ${available.length} destacados presentes; primero en orden predeterminado; sin duplicados; filtros, favoritos, orden por precio/nombre, bajas y datos originales conservados.`);
