@@ -1,0 +1,27 @@
+{
+  "id": "manual-kawasaki-monster-verde",
+  "name": "Abrigo Kawasaki Monster MotoGP · negro y verde",
+  "team": "Kawasaki",
+  "sport": "MotorSport",
+  "discipline": "MotoGP",
+  "category": "Abrigos",
+  "audience": "Adulto",
+  "version": "Estándar",
+  "season": "Sin temporada",
+  "seasonStatus": "unclassified",
+  "teamStatus": "confirmed",
+  "detail": "Adulto · Negro y verde · Abrigo solo · Temporada por confirmar",
+  "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL"
+  ],
+  "image": "./manual-products/manual-kawasaki-monster-verde/frente.jpg",
+  "original": "Kawasaki Monster MotoGP MotorSport jacket",
+  "source": "manual",
+  "manualPrice": 60,
+  "material": "poliéster/nylon",
+  "description": "Poliéster/nylon, cuello alto, cremallera frontal completa, bolsillos y manga larga. Puños y cintura elásticos. Diseño Kawasaki Monster de MotoGP. Temporada y medidas específicas por confirmar."
+}

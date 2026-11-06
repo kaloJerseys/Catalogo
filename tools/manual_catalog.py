@@ -3,7 +3,7 @@ from pathlib import Path
 import argparse, json, math, re
 
 ID = re.compile(r'manual-[a-z0-9]+(?:-[a-z0-9]+)*')
-CATEGORIES = {'Camisetas','Conjuntos','Sudaderas','Chaquetas','Polos','Pantalones y shorts','Accesorios'}
+CATEGORIES = {'Camisetas','Conjuntos','Sudaderas','Chaquetas','Abrigos','Polos','Pantalones y shorts','Accesorios'}
 
 def read_manual_products(project):
     root = Path(project).resolve()
@@ -32,6 +32,8 @@ def read_manual_products(project):
         for key,values in [('category',CATEGORIES),('audience',{'Adulto','Mujer','Infantil'}),('version',{'Estándar','Jugador','Retro'}),('teamStatus',{'confirmed','unclassified'}),('seasonStatus',{'confirmed','unclassified'})]:
             if product[key] not in values:
                 raise ValueError('Clasificación manual no válida: '+key)
+        if 'discipline' in product and (not isinstance(product['discipline'],str) or product['discipline'] not in {'F1','MotoGP','NASCAR','MotorSport'}):
+            raise ValueError('Disciplina manual no válida: '+id)
         price = product.get('manualPrice','ausente')
         if price is not None and (type(price) not in (int,float) or not math.isfinite(price) or price<0 or abs(price*100-round(price*100))>1e-7):
             raise ValueError('Precio manual no válido: '+id)

@@ -1,0 +1,27 @@
+{
+  "id": "manual-audi-negro",
+  "name": "Abrigo Audi · negro",
+  "team": "Audi",
+  "sport": "MotorSport",
+  "discipline": "MotorSport",
+  "category": "Abrigos",
+  "audience": "Adulto",
+  "version": "Estándar",
+  "season": "Sin temporada",
+  "seasonStatus": "unclassified",
+  "teamStatus": "confirmed",
+  "detail": "Adulto · Negro · Abrigo solo · Temporada por confirmar",
+  "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL"
+  ],
+  "image": "./manual-products/manual-audi-negro/frente.jpg",
+  "original": "Audi MotorSport jacket",
+  "source": "manual",
+  "manualPrice": 60,
+  "material": "poliéster/nylon",
+  "description": "Poliéster/nylon, cuello alto, cremallera frontal completa, bolsillos y manga larga. Diseño con logotipos Audi. Temporada y medidas específicas por confirmar."
+}

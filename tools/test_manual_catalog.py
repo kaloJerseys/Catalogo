@@ -32,7 +32,7 @@ class ManualCatalogTests(unittest.TestCase):
         (self.root/'manual-products/index.json').write_text('{"formatVersion":1,"products":[]}',encoding='utf-8')
         self.assertEqual(len(write_manual_index(self.root)),1)
     def test_invalid_data_blocked(self):
-        mutations=[{'manualPrice':-1},{'manualPrice':True},{'manualPrice':60.001},{'sizes':[]},{'sizes':['S','S']},{'source':'provider'},{'id':'123'},{'image':'../secreto.png'},{'image':'https://example.com/foto.png'},{'seasonStatus':'inventado'},{'description':''}]
+        mutations=[{'discipline':'inventado'},{'discipline':[]},{'manualPrice':-1},{'manualPrice':True},{'manualPrice':60.001},{'sizes':[]},{'sizes':['S','S']},{'source':'provider'},{'id':'123'},{'image':'../secreto.png'},{'image':'https://example.com/foto.png'},{'seasonStatus':'inventado'},{'description':''}]
         for mutation in mutations:
             with self.subTest(mutation=mutation):
                 product=copy.deepcopy(self.product);product.update(mutation);self.write(product)

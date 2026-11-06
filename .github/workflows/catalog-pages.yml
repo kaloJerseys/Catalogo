@@ -153,6 +153,10 @@ jobs:
         env:
           KALO_BUILD_DIR: ${{ runner.temp }}/kalo-pages
         run: node tools/verify_featured.cjs
+      - name: Verificar MotorSport y búsqueda por disciplina
+        env:
+          KALO_BUILD_DIR: ${{ runner.temp }}/kalo-pages
+        run: node tools/verify_motorsport.cjs
       - name: Crear artefacto de Pages
         if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && steps.pages.outputs.build_type == 'workflow'
         uses: actions/upload-pages-artifact@v4

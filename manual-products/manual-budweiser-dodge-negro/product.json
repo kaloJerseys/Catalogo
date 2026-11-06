@@ -1,0 +1,27 @@
+{
+  "id": "manual-budweiser-dodge-negro",
+  "name": "Abrigo Budweiser Dodge NASCAR · negro y rojo",
+  "team": "Budweiser Dodge",
+  "sport": "MotorSport",
+  "discipline": "NASCAR",
+  "category": "Abrigos",
+  "audience": "Adulto",
+  "version": "Estándar",
+  "season": "Sin temporada",
+  "seasonStatus": "unclassified",
+  "teamStatus": "confirmed",
+  "detail": "Adulto · Negro y rojo · Abrigo solo · Temporada por confirmar",
+  "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL"
+  ],
+  "image": "./manual-products/manual-budweiser-dodge-negro/frente.jpg",
+  "original": "Budweiser Dodge NASCAR MotorSport jacket",
+  "source": "manual",
+  "manualPrice": 60,
+  "material": "poliéster/nylon",
+  "description": "Poliéster/nylon, cuello alto, cremallera frontal completa, bolsillos y manga larga. Diseño con logotipos Budweiser, Dodge y NASCAR. Temporada y medidas específicas por confirmar."
+}

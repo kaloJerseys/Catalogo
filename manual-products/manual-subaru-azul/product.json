@@ -1,0 +1,27 @@
+{
+  "id": "manual-subaru-azul",
+  "name": "Abrigo Subaru · azul y amarillo",
+  "team": "Subaru",
+  "sport": "MotorSport",
+  "discipline": "MotorSport",
+  "category": "Abrigos",
+  "audience": "Adulto",
+  "version": "Estándar",
+  "season": "Sin temporada",
+  "seasonStatus": "unclassified",
+  "teamStatus": "confirmed",
+  "detail": "Adulto · Azul y amarillo · Abrigo solo · Temporada por confirmar",
+  "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL"
+  ],
+  "image": "./manual-products/manual-subaru-azul/frente.jpg",
+  "original": "Subaru MotorSport jacket",
+  "source": "manual",
+  "manualPrice": 60,
+  "material": "poliéster/nylon",
+  "description": "Poliéster/nylon, cuello alto, cremallera frontal completa, bolsillos y manga larga. Puños y cintura elásticos. Diseño con logotipos Pirelli, Subaru y Motul. Temporada y medidas específicas por confirmar."
+}

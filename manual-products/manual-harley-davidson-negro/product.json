@@ -1,0 +1,27 @@
+{
+  "id": "manual-harley-davidson-negro",
+  "name": "Abrigo Harley-Davidson · negro",
+  "team": "Harley-Davidson",
+  "sport": "MotorSport",
+  "discipline": "MotorSport",
+  "category": "Abrigos",
+  "audience": "Adulto",
+  "version": "Estándar",
+  "season": "Sin temporada",
+  "seasonStatus": "unclassified",
+  "teamStatus": "confirmed",
+  "detail": "Adulto · Negro · Abrigo solo · Temporada por confirmar",
+  "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL"
+  ],
+  "image": "./manual-products/manual-harley-davidson-negro/frente.jpg",
+  "original": "Harley-Davidson MotorSport jacket",
+  "source": "manual",
+  "manualPrice": 60,
+  "material": "poliéster/nylon",
+  "description": "Poliéster/nylon, cuello alto, cremallera frontal completa, bolsillos y manga larga. Puños y cintura elásticos. Diseño con logotipos Harley-Davidson. Temporada y medidas específicas por confirmar."
+}

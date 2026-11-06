@@ -1,0 +1,27 @@
+{
+  "id": "manual-lamborghini-negro",
+  "name": "Abrigo Lamborghini · negro",
+  "team": "Lamborghini",
+  "sport": "MotorSport",
+  "discipline": "MotorSport",
+  "category": "Abrigos",
+  "audience": "Adulto",
+  "version": "Estándar",
+  "season": "Sin temporada",
+  "seasonStatus": "unclassified",
+  "teamStatus": "confirmed",
+  "detail": "Adulto · Negro · Abrigo solo · Temporada por confirmar",
+  "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL"
+  ],
+  "image": "./manual-products/manual-lamborghini-negro/frente.jpg",
+  "original": "Lamborghini MotorSport jacket",
+  "source": "manual",
+  "manualPrice": 60,
+  "material": "poliéster/nylon",
+  "description": "Poliéster/nylon, cuello alto, cremallera frontal completa, bolsillos y manga larga. Puños y cintura elásticos. Diseño con logotipos Lamborghini. Temporada y medidas específicas por confirmar."
+}

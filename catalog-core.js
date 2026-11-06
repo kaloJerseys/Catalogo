@@ -29,12 +29,35 @@
   const teamAliases=new Map();
   for(const names of teamNames){const text=normalize(names.join(' '));for(const name of names)teamAliases.set(normalize(name),text);}
   function teamSearchText(team){return teamAliases.get(normalize(team))||normalize(team);}
-  function matchesSearch(text,query){return normalize(query).split(/\s+/).filter(Boolean).every(word=>text.includes(word));}
+  function matchesSearch(text,query){return searchQuery(query).split(/\s+/).filter(Boolean).every(word=>text.includes(word));}
+  function searchQuery(query){return normalize(query).replace(/\bmoto\s*gp\b/g,'motogp').replace(/\bf\s+1\b|\bformula\s*(?:1|uno|one)\b/g,'f1').replace(/\bmascar\b/g,'nascar').replace(/\bmotor\s+sport(s)?\b|\bmotosport\b/g,'motorsport');}
+  function motorsportDiscipline(p){
+    const sport=normalize(p.sport);
+    if(['futbol','nba','nfl'].includes(sport))return null;
+    if(sport==='f1'&&classifyProduct(p).sport==='Fútbol')return null;
+    const explicit=normalize(p.discipline);
+    if(['f1','motogp','nascar','motorsport'].includes(explicit))return {f1:'F1',motogp:'MotoGP',nascar:'NASCAR',motorsport:'MotorSport'}[explicit];
+    const text=normalize([p.original,p.detail,p.name,p.team].join(' '));
+    if(sport==='motogp'||/\bmoto\s*gp\b/.test(text))return 'MotoGP';
+    if(sport==='nascar'||/\bnascar\b/.test(text))return 'NASCAR';
+    if(sport==='f1'||/\bf1\b|\bformula\s*(?:1|one|uno)\b/.test(text))return 'F1';
+    return ['motorsport','motor sport','motosport'].includes(sport)?'MotorSport':null;
+  }
+  function sportSearchText(p){
+    const discipline=motorsportDiscipline(p);if(!discipline)return '';
+    return 'motorsport motor sport motorsports motosport deportes de motor '+({F1:'f1 f 1 formula 1 formula1 formula uno formula one',MotoGP:'motogp moto gp motociclismo',NASCAR:'nascar mascar stock car',MotorSport:''}[discipline]);
+  }
+  function matchesSport(p,selected){
+    if(!selected)return true;
+    if(selected==='MotorSport')return motorsportDiscipline(p)!==null;
+    if(['F1','MotoGP','NASCAR'].includes(selected))return motorsportDiscipline(p)===selected;
+    return p.sport===selected;
+  }
   function garmentText(value){
     return String(value??'').replace(/\bchaqueta(s)?\b/gi,(word,plural)=>{const label=plural?'abrigos':'abrigo';return word===word.toUpperCase()?label.toUpperCase():/^[A-Z]/.test(word)?label[0].toUpperCase()+label.slice(1):label;});
   }
   // La fuente conserva sus categorías originales; la tienda usa el nombre comercial.
-  function displayProduct(p){return {...p,category:p.category==='Chaquetas'?'Abrigos':p.category,name:garmentText(p.name),detail:garmentText(p.detail),description:garmentText(p.description),version:effectiveVersion(p)};}
+  function displayProduct(p){const discipline=motorsportDiscipline(p);return {...p,sport:discipline?'MotorSport':p.sport==='F1'&&classifyProduct(p).sport==='Fútbol'?'Fútbol':p.sport,...(discipline?{discipline}:{}),category:p.category==='Chaquetas'?'Abrigos':p.category,name:garmentText(p.name),detail:garmentText(p.detail),description:garmentText(p.description),version:effectiveVersion(p)};}
   function garmentAliases(p){
     if(p.category==='Camisetas')return 'camiseta camisetas jersey jerseys sueter sueteres shirt shirts';
     if(p.category==='Conjuntos')return 'conjunto conjuntos kit kits set traje';
@@ -51,8 +74,8 @@
     {key:'nba_jersey',sport:'NBA',label:'Suéter (jersey)'},
     {key:'nba_shorts',sport:'NBA',label:'Short'},
     {key:'nba_set',sport:'NBA',label:'Conjunto (suéter + short)'},
-    {key:'f1_base',sport:'F1 y NFL',label:'F1 · prendas base'},
-    {key:'nfl_base',sport:'F1 y NFL',label:'NFL · prendas base'},
+    {key:'f1_base',sport:'MotorSport y NFL',label:'F1 · prendas base'},
+    {key:'nfl_base',sport:'MotorSport y NFL',label:'NFL · prendas base'},
     {key:'polo_regular',section:'garments',sport:'Polos',label:'Polo regular · 2023 en adelante'},
     {key:'polo_retro',section:'garments',sport:'Polos',label:'Polo Retro · hasta 2022 / edición Retro'},
     {key:'long_sleeve_jersey',section:'garments',sport:'Otras prendas',label:'Camiseta de manga larga'},
@@ -123,7 +146,7 @@
     if(a.longSleeve)return {section:'garments',key:'long_sleeve_jersey'};
     if(a.sport==='Fútbol'&&a.set&&!/\bcrawling\b|\bromper\b|\bonesie\b/.test(normalize(p.original)))return {section:'general',key:'football_set'};
     if(a.sport==='NBA'&&a.shirt)return {section:'general',key:'nba_jersey'};
-    if(!a.accessory&&a.sport==='F1')return {section:'general',key:'f1_base'};
+    if(!a.accessory&&motorsportDiscipline({...p,sport:a.sport})==='F1')return {section:'general',key:'f1_base'};
     if(!a.accessory&&a.sport==='NFL')return {section:'general',key:'nfl_base'};
     const key=generalKey({...p,sport:a.sport});
     return key?{section:'general',key}:null;
@@ -183,8 +206,8 @@
     const unit=base===null?null:(Math.round(base*100)+Math.round(surcharge*100))/100;
     return {base,patches,surcharge,unit};
   }
-  function createIndex(products){return new Map(products.map(p=>{let text=normalize([p.name,p.original,p.detail,p.sport,p.category,p.audience,p.version,versionLabel(p),p.season,p.collection,p.code,p.id,teamSearchText(p.team),garmentAliases(p)].join(' '));if(/\b(?:camisetas?|jerseys?|sueter(?:es)?|shirts?)\b/.test(text))text+=' camiseta camisetas jersey jerseys sueter sueteres shirt shirts';return [p.id,text];}));}
-  function filterProducts(products,state,prices,favorites,index,featuredIds=[]){const words=normalize(state.q).split(/\s+/).filter(Boolean);const list=products.filter(p=>(!state.sport||p.sport===state.sport)&&(!state.category||p.category===state.category)&&(!state.team||p.team===state.team)&&(!state.audience||p.audience===state.audience)&&(!state.version||effectiveVersion(p)===state.version)&&(!state.season||p.season===state.season)&&(!state.favorites||favorites.has(p.id))&&words.every(w=>index.get(p.id).includes(w)));if(state.sort==='new'&&Array.isArray(featuredIds)&&featuredIds.length){const ranks=new Map(featuredIds.map((id,i)=>[String(id),i]));list.sort((a,b)=>(ranks.get(a.id)??featuredIds.length)-(ranks.get(b.id)??featuredIds.length));}if(state.sort==='name')list.sort((a,b)=>a.name.localeCompare(b.name,'es',{numeric:true}));if(state.sort==='price-low'||state.sort==='price-high')list.sort((a,b)=>{const x=priceOf(a,prices),y=priceOf(b,prices);if(x===null)return y===null?0:1;if(y===null)return -1;return state.sort==='price-low'?x-y:y-x;});return list;}
+  function createIndex(products){return new Map(products.map(p=>{let text=normalize([p.name,p.original,p.detail,p.sport,p.category,p.audience,p.version,versionLabel(p),p.season,p.collection,p.code,p.id,teamSearchText(p.team),garmentAliases(p),sportSearchText(p)].join(' '));if(/\b(?:camisetas?|jerseys?|sueter(?:es)?|shirts?)\b/.test(text))text+=' camiseta camisetas jersey jerseys sueter sueteres shirt shirts';return [p.id,text];}));}
+  function filterProducts(products,state,prices,favorites,index,featuredIds=[]){const words=searchQuery(state.q).split(/\s+/).filter(Boolean),racingWords=words.filter(w=>['f1','motogp','nascar','motorsport'].includes(w));const list=products.filter(p=>matchesSport(p,state.sport)&&(!state.category||p.category===state.category)&&(!state.team||p.team===state.team)&&(!state.audience||p.audience===state.audience)&&(!state.version||effectiveVersion(p)===state.version)&&(!state.season||p.season===state.season)&&(!state.favorites||favorites.has(p.id))&&racingWords.every(w=>w==='motorsport'?motorsportDiscipline(p)!==null:normalize(motorsportDiscipline(p))===w)&&words.every(w=>index.get(p.id).includes(w)));if(state.sort==='new'&&Array.isArray(featuredIds)&&featuredIds.length){const ranks=new Map(featuredIds.map((id,i)=>[String(id),i]));list.sort((a,b)=>(ranks.get(a.id)??featuredIds.length)-(ranks.get(b.id)??featuredIds.length));}if(state.sort==='name')list.sort((a,b)=>a.name.localeCompare(b.name,'es',{numeric:true}));if(state.sort==='price-low'||state.sort==='price-high')list.sort((a,b)=>{const x=priceOf(a,prices),y=priceOf(b,prices);if(x===null)return y===null?0:1;if(y===null)return -1;return state.sort==='price-low'?x-y:y-x;});return list;}
   function changeLineSize(bag,index,size,allowed){
     if(!Number.isInteger(index)||!bag[index]||!allowed.includes(size))throw new Error('Elige una talla de la lista.');
     const next=bag.map(line=>({...line})),line=next[index];
@@ -223,5 +246,5 @@
     lines.push('',deliveryPayment,deliveryEstimate,'','¿Me confirman el precio final y los detalles del pedido?');
     return lines.join('\n');
   }
-  return {normalize,garmentText,displayProduct,priceOf,createIndex,filterProducts,orderSummary,generalDefinitions,generalKey,effectiveVersion,versionLabel,teamSearchText,matchesSearch,changeLineSize,productUrl,classifyProduct,priceRule,patchSeason,patchOptions,validateOptions,restoreOptions,lineKey,addLine,linePrice,orderMessage,deliveryPayment,deliveryEstimate};
+  return {normalize,searchQuery,motorsportDiscipline,sportSearchText,matchesSport,garmentText,displayProduct,priceOf,createIndex,filterProducts,orderSummary,generalDefinitions,generalKey,effectiveVersion,versionLabel,teamSearchText,matchesSearch,changeLineSize,productUrl,classifyProduct,priceRule,patchSeason,patchOptions,validateOptions,restoreOptions,lineKey,addLine,linePrice,orderMessage,deliveryPayment,deliveryEstimate};
 });

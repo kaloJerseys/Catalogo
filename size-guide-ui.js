@@ -21,7 +21,7 @@
     $('#guide-source').href=g.source||(selected==='women'?'./assets/guides/mujer-proveedor.jpeg':'./assets/guides/hombre-proveedor.jpeg');
   }
   function open(p){product=p||null;selected=p?api.guideId(p,window.KALO_PRICES):'fan';view='all';render();$('#size-guide-dialog').showModal();}
-  document.addEventListener('click',event=>{const button=event.target.closest('[data-size-guide]');if(button){const id=button.dataset.productId;open(id?window.KALO_CATALOG.products.find(p=>p.id===id):null);}});
+  document.addEventListener('click',async event=>{const button=event.target.closest('[data-size-guide]');if(button){const id=button.dataset.productId;let selected=id?window.KALO_CATALOG.products.find(p=>p.id===id):null;if(id&&!selected&&window.KALO_MANUAL_READY){const manual=await window.KALO_MANUAL_READY;selected=manual.products.find(p=>p.id===id);}open(selected?window.KaloCore.displayProduct(selected):null);}});
   $('#guide-tabs').addEventListener('click',event=>{const button=event.target.closest('[data-guide]');if(button){selected=button.dataset.guide;view='all';render();$('#guide-tabs').querySelector(`[data-guide="${selected}"]`).focus();}});
   $('#measurement-view').addEventListener('click',event=>{const button=event.target.closest('[data-view]');if(button){view=button.dataset.view;render();$('#measurement-view').querySelector(`[data-view="${view}"]`).focus();}});
 })();

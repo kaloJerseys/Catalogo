@@ -62,6 +62,7 @@
   const allowed = {sport:[...new Set(products.map(p=>p.sport))],category:[...new Set(products.map(p=>p.category))],team:[...new Set(products.map(p=>p.team))],audience:['Adulto','Mujer','Infantil'],version:['Estándar','Jugador','Retro'],season:[...new Set(products.map(p=>p.season))],sort:['new','name','price-low','price-high']};
   const params=new URLSearchParams(location.search);
   if(params.get('category')==='Chaquetas')params.set('category','Abrigos');
+  if(['F1','MotoGP','NASCAR'].includes(params.get('sport'))){const discipline=params.get('sport');params.set('sport','MotorSport');params.set('q',[(params.get('q')||''),discipline].filter(Boolean).join(' '));}
   for (const key of Object.keys(allowed)) { const v=params.get(key); if(allowed[key].includes(v)) state[key]=v; }
   state.q=(params.get('q')||'').slice(0,200); state.favorites=params.get('favorites')==='1';
   $('#search').value=state.q; $('#favorites-only').checked=state.favorites;

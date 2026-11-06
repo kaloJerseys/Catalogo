@@ -1,0 +1,27 @@
+{
+  "id": "manual-mercedes-santander-gris",
+  "name": "Abrigo Mercedes Santander · negro, blanco y gris",
+  "team": "Mercedes",
+  "sport": "MotorSport",
+  "discipline": "MotorSport",
+  "category": "Abrigos",
+  "audience": "Adulto",
+  "version": "Estándar",
+  "season": "Sin temporada",
+  "seasonStatus": "unclassified",
+  "teamStatus": "confirmed",
+  "detail": "Adulto · Negro, blanco y gris · Abrigo solo · Temporada por confirmar",
+  "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL"
+  ],
+  "image": "./manual-products/manual-mercedes-santander-gris/frente.jpg",
+  "original": "Mercedes Santander MotorSport jacket",
+  "source": "manual",
+  "manualPrice": 60,
+  "material": "poliéster/nylon",
+  "description": "Poliéster/nylon, cuello alto, cremallera frontal completa, bolsillos y manga larga. Puños y cintura elásticos. Diseño con logotipos Mercedes, Santander, Mobil y Vodafone. Temporada y medidas específicas por confirmar."
+}

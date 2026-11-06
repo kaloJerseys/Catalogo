@@ -1,6 +1,21 @@
 {
   "formatVersion": 1,
   "products": [
-    "manual-red-bull-infiniti"
+    "manual-audi-negro",
+    "manual-bmw-petronas-azul",
+    "manual-budweiser-dodge-negro",
+    "manual-budweiser-dodge-rojo",
+    "manual-ferrari-negro",
+    "manual-ferrari-rojo",
+    "manual-ferrari-tricolor",
+    "manual-harley-davidson-negro",
+    "manual-kawasaki-monster-verde",
+    "manual-lamborghini-negro",
+    "manual-lexus-negro",
+    "manual-mercedes-santander-gris",
+    "manual-mercedes-santander-rojo",
+    "manual-porsche-negro",
+    "manual-red-bull-infiniti",
+    "manual-subaru-azul"
   ]
 }

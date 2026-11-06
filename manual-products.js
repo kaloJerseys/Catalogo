@@ -2,7 +2,7 @@
 (() => {
   'use strict';
   const idPattern=/^manual-[a-z0-9]+(?:-[a-z0-9]+)*$/;
-  const allowedCategories=['Camisetas','Conjuntos','Sudaderas','Chaquetas','Polos','Pantalones y shorts','Accesorios'];
+  const allowedCategories=['Camisetas','Conjuntos','Sudaderas','Chaquetas','Abrigos','Polos','Pantalones y shorts','Accesorios'];
   async function readJSON(path,optional=false){
     const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),10000);
     try{
@@ -18,6 +18,7 @@
       if(typeof product[key]!=='string'||!product[key].trim()||product[key].length>2000)throw new Error('Campo manual no válido: '+key);
     }
     if(!allowedCategories.includes(product.category)||!['Adulto','Mujer','Infantil'].includes(product.audience)||!['Estándar','Jugador','Retro'].includes(product.version)||!['confirmed','unclassified'].includes(product.teamStatus)||!['confirmed','unclassified'].includes(product.seasonStatus))throw new Error('Clasificación manual no válida: '+id);
+    if(product.discipline!==undefined&&!['F1','MotoGP','NASCAR','MotorSport'].includes(product.discipline))throw new Error('Disciplina manual no válida: '+id);
     if(product.manualPrice!==null&&(typeof product.manualPrice!=='number'||!Number.isFinite(product.manualPrice)||product.manualPrice<0||Math.abs(product.manualPrice*100-Math.round(product.manualPrice*100))>1e-7))throw new Error('Precio manual no válido: '+id);
     if(!Array.isArray(product.sizes)||!product.sizes.length||new Set(product.sizes).size!==product.sizes.length||product.sizes.some(s=>typeof s!=='string'||!s.trim()||s.length>30))throw new Error('Tallas manuales no válidas: '+id);
     if(typeof product.image!=='string'||!new RegExp('^\\./manual-products/'+id+'/[a-z0-9][a-z0-9-]*\\.(png|jpg|jpeg|webp)$').test(product.image))throw new Error('Foto manual no válida: '+id);

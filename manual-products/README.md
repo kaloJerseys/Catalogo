@@ -11,3 +11,13 @@ Para retirar una prenda cuando el proveedor ya la tenga, **borra únicamente su 
 La foto, precio y tallas se validan antes de preparar Pages. Una ficha corrupta o un fallo de red muestra un aviso; no se presenta como una retirada voluntaria. Para previsualizar localmente utiliza un servidor HTTP, por ejemplo `python -m http.server 8000`; abrir index.html como archivo local no permite cargar JSON.
 
 Las tablas generales de tallas son una referencia: confirma las medidas de un modelo manual si no tiene tabla específica. No inventes temporada ni código del proveedor. Las referencias que empiezan por `manual-` son códigos internos de Kalo.
+
+## MotorSport y búsquedas por disciplina
+
+Para prendas de motor usa `sport: "MotorSport"`. El campo opcional `discipline` admite `F1`, `MotoGP`, `NASCAR` o `MotorSport`. Usa este último si no se ha confirmado una competición específica. No asignes F1 a todas las marcas de automóviles.
+
+La tienda agrupa las prendas bajo MotorSport y mantiene búsquedas específicas como F1/Fórmula 1, MotoGP/moto GP y NASCAR. Los registros históricos del proveedor con sport F1 se presentan en MotorSport sin reescribir el catálogo ni cambiar su tarifa existente. Una marca no confirma por sí sola la disciplina de un modelo manual.
+
+Las fichas nuevas se documentaron con el PDF recibido el 6 de noviembre de 2026. Temporadas y medidas específicas no facilitadas quedan por confirmar. Las fotos originales se extrajeron del PDF; el PDF fuente y las comprobaciones se guardan fuera del repositorio.
+
+Para los abrigos manuales usa `category: "Abrigos"`. Se sigue aceptando `Chaquetas` en fichas antiguas para conservar compatibilidad; el catálogo del proveedor mantiene sus categorías de origen.

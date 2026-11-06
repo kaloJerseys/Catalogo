@@ -1,0 +1,27 @@
+{
+  "id": "manual-bmw-petronas-azul",
+  "name": "Abrigo BMW Petronas · azul marino",
+  "team": "BMW",
+  "sport": "MotorSport",
+  "discipline": "MotorSport",
+  "category": "Abrigos",
+  "audience": "Adulto",
+  "version": "Estándar",
+  "season": "Sin temporada",
+  "seasonStatus": "unclassified",
+  "teamStatus": "confirmed",
+  "detail": "Adulto · Azul marino · Abrigo solo · Temporada por confirmar",
+  "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL"
+  ],
+  "image": "./manual-products/manual-bmw-petronas-azul/frente.jpg",
+  "original": "BMW Petronas MotorSport jacket",
+  "source": "manual",
+  "manualPrice": 60,
+  "material": "poliéster/nylon",
+  "description": "Poliéster/nylon, cuello alto, cremallera frontal completa, bolsillos y manga larga. Diseño con logotipos Petronas, BMW y Series M. Temporada y medidas específicas por confirmar."
+}

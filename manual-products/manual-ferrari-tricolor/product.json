@@ -1,0 +1,27 @@
+{
+  "id": "manual-ferrari-tricolor",
+  "name": "Abrigo Ferrari F1 · blanco, rojo y negro",
+  "team": "Ferrari",
+  "sport": "MotorSport",
+  "discipline": "F1",
+  "category": "Abrigos",
+  "audience": "Adulto",
+  "version": "Estándar",
+  "season": "Sin temporada",
+  "seasonStatus": "unclassified",
+  "teamStatus": "confirmed",
+  "detail": "Adulto · Blanco, rojo y negro · Abrigo solo · Temporada por confirmar",
+  "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL"
+  ],
+  "image": "./manual-products/manual-ferrari-tricolor/frente.jpg",
+  "original": "Ferrari F1 MotorSport jacket",
+  "source": "manual",
+  "manualPrice": 60,
+  "material": "poliéster/nylon",
+  "description": "Poliéster/nylon, cuello alto, cremallera frontal completa, bolsillos y manga larga. Diseño con logotipos Ferrari, Shell y F1. Temporada y medidas específicas por confirmar."
+}
