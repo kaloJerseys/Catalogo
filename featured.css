@@ -1,0 +1,4 @@
+.most-requested-tag,.most-requested-inline{background:var(--red);color:var(--cream);font-family:var(--body);font-size:12px;font-weight:700;line-height:1.2;border-radius:3px;padding:6px 9px}
+.most-requested-tag{position:absolute;left:10px;top:10px;z-index:1;max-width:calc(100% - 72px);pointer-events:none}
+.most-requested-inline{display:inline-block;margin:0 0 10px}
+@media(max-width:700px){.most-requested-tag{left:7px;top:8px;font-size:10px;padding:5px 7px}.most-requested-inline{font-size:11px}}

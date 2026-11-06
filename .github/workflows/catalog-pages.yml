@@ -149,6 +149,10 @@ jobs:
         run: |
           python3 -m unittest discover -s tools -p test_manual_catalog.py
           node tools/verify_manual_products.cjs
+      - name: Verificar selección Más pedidos
+        env:
+          KALO_BUILD_DIR: ${{ runner.temp }}/kalo-pages
+        run: node tools/verify_featured.cjs
       - name: Crear artefacto de Pages
         if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && steps.pages.outputs.build_type == 'workflow'
         uses: actions/upload-pages-artifact@v4

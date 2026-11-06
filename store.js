@@ -4,6 +4,8 @@
   const $$ = (s, root = document) => [...root.querySelectorAll(s)];
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const core=window.KaloCore;
+  const featuredIds=Array.isArray(window.KALO_FEATURED?.productIds)?window.KALO_FEATURED.productIds:[];
+  const isFeatured=p=>featuredIds.includes(p.id);
   const coupons=window.KaloCoupons;
   let activeCoupons=coupons?coupons.restore(readCoupons()):[],couponDraft='',couponFeedback='',couponError=false;
   function readCoupons(){try{return JSON.parse(localStorage.getItem('kalo-coupons-v1'))||[];}catch{return [];}}
@@ -69,9 +71,9 @@
   let selectedProduct=null,selectedSize='';
   let filtered=[];
   function filteredProducts() {
-    return core.filterProducts(products,state,prices,favorites,searchable);
+    return core.filterProducts(products,state,prices,favorites,searchable,featuredIds);
   }
-  function card(p) { return `<article class="product-card"><div class="product-picture"><button class="product-open" data-product="${p.id}" aria-label="Ver ${esc(p.name+' · '+p.detail)}"><img src="${esc(p.image)}" alt="${esc(p.name+' · '+p.detail)}" loading="lazy" decoding="async" referrerpolicy="no-referrer" width="300" height="340"></button><button class="favorite-button" data-favorite="${p.id}" aria-label="${favorites.has(p.id)?'Quitar de':'Agregar a'} favoritos: ${esc(p.name)}" aria-pressed="${favorites.has(p.id)}">${heart}</button>${p.version==='Retro'||p.audience==='Infantil'||p.version==='Jugador'?`<span class="product-tag">${esc(p.version==='Retro'?'RETRO':p.audience==='Infantil'?'INFANTIL':'VERSIÓN JUGADOR')}</span>`:''}</div><div class="product-info"><p class="category">${esc(p.sport)} / ${esc(p.category)}</p><button class="product-name" data-product="${p.id}">${esc(p.name)}</button><p class="detail">${esc(p.detail)}</p><div class="product-bottom">${priceHTML(p)}<button class="quick-add" data-product="${p.id}" aria-label="Elegir talla de ${esc(p.name)}">Elegir talla</button></div></div></article>`; }
+  function card(p) { return `<article class="product-card"><div class="product-picture">${isFeatured(p)?'<span class="most-requested-tag">Más pedidos</span>':''}<button class="product-open" data-product="${p.id}" aria-label="Ver ${esc(p.name+' · '+p.detail)}"><img src="${esc(p.image)}" alt="${esc(p.name+' · '+p.detail)}" loading="lazy" decoding="async" referrerpolicy="no-referrer" width="300" height="340"></button><button class="favorite-button" data-favorite="${p.id}" aria-label="${favorites.has(p.id)?'Quitar de':'Agregar a'} favoritos: ${esc(p.name)}" aria-pressed="${favorites.has(p.id)}">${heart}</button>${p.version==='Retro'||p.audience==='Infantil'||p.version==='Jugador'?`<span class="product-tag">${esc(p.version==='Retro'?'RETRO':p.audience==='Infantil'?'INFANTIL':'VERSIÓN JUGADOR')}</span>`:''}</div><div class="product-info"><p class="category">${esc(p.sport)} / ${esc(p.category)}</p><button class="product-name" data-product="${p.id}">${esc(p.name)}</button><p class="detail">${esc(p.detail)}</p><div class="product-bottom">${priceHTML(p)}<button class="quick-add" data-product="${p.id}" aria-label="Elegir talla de ${esc(p.name)}">Elegir talla</button></div></div></article>`; }
   function wireImageErrors(root) { $$('img',root).forEach(img=>img.addEventListener('error',()=>{img.src='./assets/image-unavailable.svg';},{once:true})); }
   function render(reset=true) {
     if(reset) {state.limit=36;filtered=filteredProducts();}
@@ -104,7 +106,7 @@
     const sizes=window.KaloSizes.sizesFor(p,prices);
     const canPersonalize=core.classifyProduct(p,prices).personalizable,patches=core.patchOptions(p,prices);
     $('#product-detail').innerHTML=`<div class="modal-image"><img src="${esc(p.image)}" alt="${esc(p.name+' · '+p.detail)}" referrerpolicy="no-referrer"></div><div class="modal-info">
-      <p class="eyebrow">${esc(p.sport)} · ${esc(p.category)}</p><h2 id="product-title">${esc(p.name)}</h2><p class="detail">${esc(p.detail)}</p><p class="detail">${esc(p.audience)} · Versión ${esc(core.versionLabel(p))}</p>${priceHTML(p)}${p.source==='manual'?`<p class="detail">${esc(p.description)}</p>`:''}
+      <p class="eyebrow">${esc(p.sport)} · ${esc(p.category)}</p>${isFeatured(p)?'<span class="most-requested-inline">Más pedidos</span>':''}<h2 id="product-title">${esc(p.name)}</h2><p class="detail">${esc(p.detail)}</p><p class="detail">${esc(p.audience)} · Versión ${esc(core.versionLabel(p))}</p>${priceHTML(p)}${p.source==='manual'?`<p class="detail">${esc(p.description)}</p>`:''}
       <form id="product-options" novalidate>
         <div class="size-heading"><p class="size-label">Elige tu talla</p><button type="button" class="size-guide-link" data-size-guide data-product-id="${esc(p.id)}">Guía de tallas ↗</button></div>
         <div class="sizes" role="group" aria-label="Talla">${sizes.map(s=>`<button type="button" data-size="${esc(s)}" aria-pressed="false">${esc(s)}</button>`).join('')}</div>
