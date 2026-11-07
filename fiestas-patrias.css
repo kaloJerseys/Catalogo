@@ -36,6 +36,61 @@
 .kalo-patrias .patrias-city-line{fill:none;stroke:currentColor;stroke-width:1.4}
 .kalo-patrias .patrias-hero-ribbon{position:absolute;left:calc(50% - 155px);bottom:10px;width:185px;height:48px;z-index:0}
 .kalo-patrias .patrias-art-stars{position:absolute;right:11px;top:11px;width:45px;height:30px;z-index:2}
+.kalo-patrias .patrias-promo{
+  background:linear-gradient(135deg,#f5dce3 0%,#fff9ed 52%,#dbe7fb 100%);
+}
+.kalo-patrias .patrias-promo .pitch-lines{border-color:#1e42813b}
+.kalo-patrias .patrias-promo .pitch-lines:before{border-color:#1e42813b}
+.kalo-patrias .patrias-promo .pitch-lines:after{background:#1e42813b}
+.kalo-patrias .patrias-promo .art-label{
+  display:grid;
+  gap:6px;
+  top:24px;
+  left:25px;
+  z-index:2;
+  color:#172e54;
+  letter-spacing:0;
+}
+.kalo-patrias .patrias-coupon-code{
+  justify-self:start;
+  padding:6px 12px;
+  border-radius:4px;
+  background:var(--patrias-blue);
+  color:var(--patrias-white);
+  font:600 12px/1.4 var(--body);
+}
+.kalo-patrias .patrias-coupon-code strong{margin-left:4px;letter-spacing:1px}
+.kalo-patrias .patrias-coupon-scope{font:700 clamp(19px,2.2vw,32px)/1.05 var(--heading)}
+.kalo-patrias .patrias-promo .hero-shirt{width:48%;box-shadow:0 14px 25px #192d5030}
+.kalo-patrias .patrias-promo .hero-shirt img{height:auto;aspect-ratio:4/3;object-fit:contain;background:#555}
+.kalo-patrias .patrias-promo .hero-shirt-one{left:5%;top:136px;transform:rotate(-8deg)}
+.kalo-patrias .patrias-promo .hero-shirt-two{right:4%;top:105px;transform:rotate(8deg)}
+.kalo-patrias .patrias-promo .hero-shirt span{color:#172e54;letter-spacing:.75px}
+.kalo-patrias .patrias-promo .hero-shirt-two span{text-align:right}
+.kalo-patrias .patrias-promo .passion-stamp{
+  display:flex;
+  right:22px;
+  bottom:42px;
+  background:var(--patrias-red);
+  border-color:var(--patrias-white);
+  outline-color:#ffffff80;
+  font-size:34px;
+}
+.kalo-patrias .patrias-promo .passion-stamp small{font-size:8px;letter-spacing:1px}
+.kalo-patrias .patrias-promo .art-bottom{display:flex;color:var(--patrias-blue)}
+@media(max-width:700px){
+  .kalo-patrias .hero:has(.patrias-promo){grid-template-columns:minmax(0,1fr);row-gap:18px}
+  .kalo-patrias .hero-art.patrias-promo{height:clamp(310px,74vw,365px)}
+  .kalo-patrias .patrias-promo .art-label{top:15px;left:17px;gap:4px}
+  .kalo-patrias .patrias-coupon-code{font-size:11px;padding:4px 9px}
+  .kalo-patrias .patrias-promo .hero-shirt{width:45%;max-width:230px}
+  .kalo-patrias .patrias-promo .hero-shirt-one{left:6%;top:93px}
+  .kalo-patrias .patrias-promo .hero-shirt-two{right:6%;top:78px}
+  .kalo-patrias .patrias-promo .hero-shirt span{font-size:8px;letter-spacing:0}
+  .kalo-patrias .patrias-promo .passion-stamp{width:63px;height:63px;right:11px;bottom:16px;font-size:24px}
+  .kalo-patrias .patrias-promo .passion-stamp small{font-size:6px;letter-spacing:.4px;margin-top:3px}
+  .kalo-patrias .patrias-promo .art-bottom{left:17px;bottom:13px;font-size:8px;letter-spacing:1.3px}
+}
 .kalo-patrias #catalogo .section-heading>div{position:relative}
 .kalo-patrias .patrias-catalog-detail{position:absolute;width:110px;height:74px;right:-132px;top:35px}
 .kalo-patrias .patrias-catalog-detail .patrias-catalog-stars{position:absolute;top:0;left:0;width:100px;height:30px}

@@ -1,13 +1,62 @@
-/* Capa exclusivamente decorativa. No consulta ni modifica datos del catálogo. */
+/* Tema estacional. Las camisetas de la promoción se leen del catálogo. */
 (() => {
   'use strict';
   if (typeof document === 'undefined') return;
+
+  async function promotePanama(art) {
+    const products = window.KALO_CATALOG?.products;
+    const coupon = window.KaloCoupons;
+    if (!art || !products || !coupon) return;
+
+    const shirts = [
+      { id: '235994649', selector: '#hero-one', caption: 'PANAMÁ · LOCAL' },
+      { id: '235994698', selector: '#hero-two', caption: 'PANAMÁ · VISITANTE' }
+    ].map(shirt => ({
+      ...shirt,
+      product: products.find(product => product.id === shirt.id),
+      original: art.querySelector(shirt.selector)
+    }));
+    const label = art.querySelector('.art-label');
+    const stamp = art.querySelector('.passion-stamp');
+    const footer = art.querySelector('.art-bottom');
+    if (!label || !stamp || !footer || shirts.some(({ product, original }) =>
+      !original?.nextElementSibling || !product ||
+      !/^\.\/assets\/products\/[a-f0-9]{18,64}\.webp$/.test(product.image) ||
+      !coupon.validate('PTYOFF', [{ id: product.id }], new Map([[product.id, product]]), window.KALO_PRICES).ok
+    )) return;
+
+    // Deja los IDs originales al store y muestra la promoción cuando ambas fotos estén listas.
+    const photos = shirts.map(({ product }) => {
+      const image = new Image();
+      image.alt = `${product.name} · ${product.detail}`;
+      image.src = product.image;
+      return image;
+    });
+    try {
+      await Promise.all(photos.map(image => image.decode()));
+    } catch {
+      return;
+    }
+    shirts.forEach(({ original, caption }, index) => {
+      original.hidden = true;
+      original.nextElementSibling.textContent = caption;
+      original.after(photos[index]);
+    });
+    label.innerHTML = '<span class="patrias-coupon-code">Cupón <strong>PTYOFF</strong></span> <span class="patrias-coupon-scope">En camisetas de Panamá</span>';
+    stamp.innerHTML = '15% <small>DESCUENTO</small>';
+    stamp.removeAttribute('aria-hidden');
+    footer.textContent = 'SELECCIÓN DE PANAMÁ';
+    art.setAttribute('aria-label', 'Promoción de Fiestas Patrias');
+    art.classList.add('patrias-promo');
+  }
 
   function decorate() {
     if (document.querySelector('[data-kalo-patrias="strip"]')) return;
     const hero = document.querySelector('.hero');
     if (!hero) return;
     document.body.classList.add('kalo-patrias');
+    const catalogTitle = document.querySelector('#catalog-title');
+    if (catalogTitle) catalogTitle.textContent = 'Feliz mes de la patria';
 
     const svg = (name, box, content) => `<svg class="${name}" viewBox="${box}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">${content}</svg>`;
     const star = (color, x, y, scale = 1) => `<path class="patrias-${color}" transform="translate(${x} ${y}) scale(${scale})" d="M0-10 2.6-3.2 9.5-3.1 4 1.2 5.8 8 0 4-5.8 8-4 1.2-9.5-3.1-2.6-3.2Z"/>`;
@@ -39,6 +88,7 @@
     insert(how, 'patrias-how-city', svg('patrias-city-svg','0 0 600 162', city+'<path class="patrias-bridge" d="M345 143Q446 27 559 143M345 143Q446 66 559 143M365 143V122M390 143V99M418 143V83M446 143V79M473 143V86M501 143V104M530 143V126"/>'));
     insert(how, 'patrias-how-stars', svg('patrias-stars-svg','0 0 62 56',star('white',24,13,.63)+star('blue',12,35,.45)+star('white',38,39,.32)));
     insert(document.querySelector('footer'), 'patrias-footer-detail', waves('patrias-footer-wave'));
+    void promotePanama(document.querySelector('.hero-art'));
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', decorate, {once:true});
