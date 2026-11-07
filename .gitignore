@@ -2,8 +2,8 @@ tools/catalog-raw.json
 __pycache__/
 *.zip
 
-/_no-subir-a-github/
+_no-subir-a-github/
 
 /.catalog-updater/
-/.venv/
+.venv/
 /actualizar-catalogo.cmd

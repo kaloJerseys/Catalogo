@@ -3,7 +3,7 @@
   "generatedAt": "2026-11-05T22:53:17.737714-05:00",
   "publishable": true,
   "productCount": 19263,
-  "rootCatalogDigest": "7729eaf15b663ad051a869c8fee5fb91a2724419376bb207e14525ea298d862b",
+  "rootCatalogDigest": "5f1292b0f05b113341041fd5a6951ca583dc936670af0cef8c8371cc02d6aae7",
   "explicitRemoval": false,
   "missingIds": [],
   "sourceFingerprints": {
@@ -20394,7 +20394,7 @@
     {
       "path": "data/catalog.js",
       "bytes": 2300941,
-      "sha256": "41120eca939f86ee0ec7332e135b8b86ab8d1885132926ae2d41fc06e3701654"
+      "sha256": "d6f472e7f1cc3760c96969d01dec15bf3b17cf369fa416fef352c3cd98c7274a"
     }
   ]
 }

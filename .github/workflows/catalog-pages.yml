@@ -147,9 +147,9 @@ jobs:
         env:
           KALO_BUILD_DIR: ${{ runner.temp }}/kalo-pages
         run: |
-          python3 -m unittest discover -s tools -p test_manual_catalog.py
+          python3 -m unittest discover -s tools -p 'test_*.py'
           node tools/verify_manual_products.cjs
-      - name: Verificar selección Más pedidos
+      - name: Verificar selección Más Vendidos
         env:
           KALO_BUILD_DIR: ${{ runner.temp }}/kalo-pages
         run: node tools/verify_featured.cjs

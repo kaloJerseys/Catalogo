@@ -36,9 +36,17 @@ def safe_relative(value):
     if value!='data/catalog.js' and not re.fullmatch(r'assets/products/[a-f0-9]{18,64}\.webp',value):raise ValueError('El paquete intenta cambiar un archivo ajeno al catálogo: '+value)
     return value
 
+def check_package_layout(folder):
+    folder=Path(folder)
+    allowed={'manifest.json','report.md','payload'}
+    extra=sorted(p.name for p in folder.iterdir() if p.name not in allowed)
+    if extra:raise ValueError('Archivos ajenos al paquete en catalog-update-ready: '+', '.join(extra)+'. Conserva aqui solo manifest.json, report.md y payload/.')
+    if not (folder/'payload').is_dir() or (folder/'payload').is_symlink():raise ValueError('Falta un directorio payload valido.')
+
 def validate_package(folder,project):
     folder=Path(folder).resolve();project=Path(project).resolve()
     if folder.is_symlink() or (folder/'manifest.json').is_symlink():raise ValueError('No se admiten enlaces simbólicos.')
+    check_package_layout(folder)
     manifest=json.loads((folder/'manifest.json').read_text('utf8'))
     if manifest.get('formatVersion')!=1 or not manifest.get('publishable') or not manifest.get('source',{}).get('complete'):raise ValueError('El manifiesto no autoriza una extracción completa.')
     if not isinstance(manifest.get('generatedAt'),str) or datetime.fromisoformat(manifest['generatedAt']).tzinfo is None:raise ValueError('Falta una fecha de generación con zona horaria.')
