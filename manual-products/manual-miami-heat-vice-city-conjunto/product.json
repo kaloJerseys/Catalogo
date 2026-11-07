@@ -1,0 +1,21 @@
+{
+  "id": "manual-miami-heat-vice-city-conjunto",
+  "name": "Miami Heat - Vice City Edition",
+  "team": "Miami Heat",
+  "sport": "NBA",
+  "category": "Conjuntos",
+  "audience": "Adulto",
+  "version": "Estándar",
+  "season": "Sin temporada",
+  "seasonStatus": "unclassified",
+  "teamStatus": "confirmed",
+  "detail": "Conjunto · Jersey y short",
+  "sizes": [
+    "Consultar talla"
+  ],
+  "image": "./manual-products/manual-miami-heat-vice-city-conjunto/frente.png",
+  "original": "Miami Heat Vice City Edition Conjunto · Jersey y short",
+  "source": "manual",
+  "manualPrice": 75,
+  "description": "Edición especial en negro con detalles rosa. Tallas por confirmar."
+}

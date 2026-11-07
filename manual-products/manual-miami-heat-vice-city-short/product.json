@@ -1,0 +1,21 @@
+{
+  "id": "manual-miami-heat-vice-city-short",
+  "name": "Miami Heat - Vice City Edition",
+  "team": "Miami Heat",
+  "sport": "NBA",
+  "category": "Pantalones y shorts",
+  "audience": "Adulto",
+  "version": "Estándar",
+  "season": "Sin temporada",
+  "seasonStatus": "unclassified",
+  "teamStatus": "confirmed",
+  "detail": "Short",
+  "sizes": [
+    "Consultar talla"
+  ],
+  "image": "./manual-products/manual-miami-heat-vice-city-short/frente.jpg",
+  "original": "Miami Heat Vice City Edition Short",
+  "source": "manual",
+  "manualPrice": 35,
+  "description": "Edición especial en negro con detalles rosa. Tallas por confirmar."
+}
