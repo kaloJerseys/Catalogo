@@ -44,6 +44,7 @@
     return ['motorsport','motor sport','motosport'].includes(sport)?'MotorSport':null;
   }
   function sportSearchText(p){
+    if(p.sport==='NBA')return 'basketball basquetbol baloncesto';
     const discipline=motorsportDiscipline(p);if(!discipline)return '';
     return 'motorsport motor sport motorsports motosport deportes de motor '+({F1:'f1 f 1 formula 1 formula1 formula uno formula one',MotoGP:'motogp moto gp motociclismo',NASCAR:'nascar mascar stock car',MotorSport:''}[discipline]);
   }

@@ -11,11 +11,15 @@
   "teamStatus": "confirmed",
   "detail": "Jersey · Diseño HEAT",
   "sizes": [
-    "Consultar talla"
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL"
   ],
   "image": "./manual-products/manual-miami-heat-vice-city-jersey-heat/frente.jpg",
   "original": "Miami Heat Vice City Edition Jersey",
   "source": "manual",
   "manualPrice": 45,
-  "description": "Edición especial en negro con detalles rosa. Tallas por confirmar."
+  "description": "Edición especial en negro con detalles rosa."
 }

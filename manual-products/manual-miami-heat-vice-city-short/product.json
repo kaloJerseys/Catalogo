@@ -11,11 +11,15 @@
   "teamStatus": "confirmed",
   "detail": "Short",
   "sizes": [
-    "Consultar talla"
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL"
   ],
   "image": "./manual-products/manual-miami-heat-vice-city-short/frente.jpg",
   "original": "Miami Heat Vice City Edition Short",
   "source": "manual",
   "manualPrice": 35,
-  "description": "Edición especial en negro con detalles rosa. Tallas por confirmar."
+  "description": "Edición especial en negro con detalles rosa."
 }
