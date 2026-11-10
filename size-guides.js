@@ -40,7 +40,7 @@
       source:"./assets/guides/basketball-proveedor.png"
     }
   };
-  function isCoat(p,prices={}){return prices.productAttributes?.[p.id]?.garment==='jacket_pants_set'|| ['Chaquetas','Abrigos','Sudaderas'].includes(p.category)||/\b(?:jackets?|coats?|hoodies?)\b/i.test(p.original||'');}
+  function isCoat(p,prices={}){return prices.productAttributes?.[p.id]?.garment==='jacket_pants_set'|| ['Chaquetas','Abrigos','Sudaderas'].includes(p.category)||/\b(?:jackets?|coats?|hoodies?|windbreakers?|winbreakers?|werindbreakers?)\b/i.test(p.original||'');}
   function defaultGuideId(p,prices){if(isCoat(p,prices))return p.audience==='Infantil'?'kidsCoat':'coat';if(p.audience==='Infantil')return 'kids';if(p.audience==='Mujer')return 'women';return p.version==='Jugador'?'player':'fan';}
   function guideId(p,prices){
     if(p.sport==='NBA'&&p.audience==='Adulto'&&!isCoat(p,prices)){

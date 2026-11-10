@@ -58,7 +58,27 @@
     return String(value??'').replace(/\bchaqueta(s)?\b/gi,(word,plural)=>{const label=plural?'abrigos':'abrigo';return word===word.toUpperCase()?label.toUpperCase():/^[A-Z]/.test(word)?label[0].toUpperCase()+label.slice(1):label;});
   }
   // La fuente conserva sus categorías originales; la tienda usa el nombre comercial.
-  function displayProduct(p){const discipline=motorsportDiscipline(p);return {...p,sport:discipline?'MotorSport':p.sport==='F1'&&classifyProduct(p).sport==='Fútbol'?'Fútbol':p.sport,...(discipline?{discipline}:{}),category:p.category==='Chaquetas'?'Abrigos':p.category,name:garmentText(p.name),detail:garmentText(p.detail),description:garmentText(p.description),version:effectiveVersion(p)};}
+  function displayProduct(p, prices = {}) {
+    const discipline = motorsportDiscipline(p);
+    const sport = discipline ? 'MotorSport'
+      : p.sport === 'F1' && classifyProduct(p).sport === 'Fútbol' ? 'Fútbol' : p.sport;
+    let category = p.category === 'Chaquetas' ? 'Abrigos' : p.category;
+    let detail = garmentText(p.detail);
+    if (p.category === 'Conjuntos' || /mangas? largas?/i.test(detail)) {
+      const garment = classifyProduct(p, prices);
+      if (garment.jacket) {
+        const label = garment.jacketSet ? 'Abrigo + pantalón' : 'Abrigo';
+        const facets = detail.split('·').map(value => value.trim()).filter(value =>
+          value && !['manga larga','mangas largas','conjuntos',normalize(label)].includes(normalize(value)));
+        detail = [label, ...facets].join(' · ');
+        if (!garment.jacketSet) category = 'Abrigos';
+      } else if (garment.longSleeveSet && !/mangas? largas?/i.test(detail)) {
+        detail = [detail, 'Manga larga'].filter(Boolean).join(' · ');
+      }
+    }
+    return {...p, sport, ...(discipline ? {discipline} : {}), category,
+      name:garmentText(p.name), detail, description:garmentText(p.description), version:effectiveVersion(p)};
+  }
   function garmentAliases(p){
     if(p.category==='Camisetas')return 'camiseta camisetas jersey jerseys sueter sueteres shirt shirts';
     if(p.category==='Conjuntos')return 'conjunto conjuntos kit kits set traje';
@@ -118,14 +138,14 @@
     const pants=p.category==='Pantalones y shorts'||/\b(?:shorts|pants?|trousers?)\b/.test(text);
     const polo=p.category==='Polos'||/\bpolo\b/.test(text);
     const set=p.category==='Conjuntos'||/\b(?:suits?|sets?|tracksuits?)\b|\btrack suit\b|\bkids? kits?\b/.test(text);
-    const jacket=!accessory&&(/\b(?:jackets?|jakcet|windbreakers?|winbreaker|werindbreaker|coats?)\b|\breversible breaker\b/.test(text)||['Chaquetas','Abrigos'].includes(p.category));
+    const jacket=!accessory&&(verified.garment==='jacket_pants_set'||/\b(?:jackets?|jakcet|windbreakers?|winbreaker|werindbreaker|coats?)\b|\breversible breaker\b/.test(text)||['Chaquetas','Abrigos'].includes(p.category));
     const hoodie=!jacket&&!accessory&&/\bhoodies?\b|\bhooded sweatshirt\b|sudadera con capucha|连帽卫衣/.test(text);
     const cotton=/\bcotton\b|\balgodon\b|纯棉|棉质/.test(text+' '+material)&&!/\b(?:not|non|sin) (?:cotton|algodon)\b/.test(text+' '+material);
-    const jacketSet=!accessory&&jacket&&(set||pants);
+    const jacketSet=jacket&&(set||pants||verified.garment==='jacket_pants_set');
     const shirt=!accessory&&!pants&&!polo&&!jacket&&!hoodie&&!set&&(p.category==='Camisetas'||/\bjerseys?\b|\b(?:soccer|football|basketball) shirts?\b/.test(text));
-    const hasLongSleeves=/\blong sleeve(?:s|d)?\b|\blongsleeve(?:s|d)?\b|mangas? largas?/.test(text+' '+normalize(p.detail));
+    const hasLongSleeves=verified.longSleeve===true||/\blong sleeve(?:s|d)?\b|\blongsleeve(?:s|d)?\b|mangas? largas?/.test(text+' '+normalize(p.detail));
     const longSleeve=shirt&&hasLongSleeves;
-    const longSleeveSet=set&&!accessory&&hasLongSleeves;
+    const longSleeveSet=set&&!accessory&&!jacket&&!hoodie&&hasLongSleeves;
     const casual=/\bt shirts?\b|\btees?\b|\bcasual\b|\bcrawling\b|\bromper\b|\bonesie\b/.test(text)||(/\bcotton\b/.test(text)&&!/\bjerseys?\b/.test(text));
     const jerseyEvidence=/\bjerseys?\b|\bsoccer\b|\bfootball\b|\bbasketball\b|\bplayer edition\b/.test(text)||p.teamStatus==='confirmed';
     // Facetas completas del catálogo; el título original resuelve los seis casos «Prepartido».
@@ -226,7 +246,7 @@
   function orderSummary(bag,products,prices){let subtotal=0,unknown=0,count=0;for(const line of bag){const p=products.get(line.id);if(!p)continue;const n=linePrice(p,line,prices).unit;count+=line.quantity;if(n===null)unknown+=line.quantity;else subtotal+=Math.round(n*100)*line.quantity;}return {subtotal:subtotal/100,unknown,count};}
   function orderMessage(bag,products,prices,money=n=>new Intl.NumberFormat('es-PA',{style:'currency',currency:'USD'}).format(n),quote=null,catalogBase=null){
     const lines=['¡Hola, Kalo! Me interesan estos productos:'];
-    bag.forEach((line,i)=>{const raw=products.get(line.id);if(!raw)return;const p=displayProduct(raw);const options=validateOptions(p,line,prices),adjusted=quote?.lines[i],cost=adjusted?.cost||linePrice(p,line,prices);
+    bag.forEach((line,i)=>{const raw=products.get(line.id);if(!raw)return;const p=displayProduct(raw,prices);const options=validateOptions(p,line,prices),adjusted=quote?.lines[i],cost=adjusted?.cost||linePrice(p,line,prices);
       lines.push('',`${i+1}. ${p.name}`,p.detail,`Talla: ${line.size} · Cantidad: ${line.quantity}`,`Ref. ${p.id}`,cost.base===null?'Precio base: por confirmar':`Precio base: ${money(cost.base)} c/u`);
       if(options.personalization)lines.push('Personalización: Sí (GRATIS)',`Nombre: ${options.personalization.name}`,`Dorsal: ${options.personalization.number}`);else lines.push('Sin personalización');
       for(const patch of cost.patches)lines.push(`${patch.label}: ${money(patch.price)} por unidad`);
