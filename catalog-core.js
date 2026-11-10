@@ -64,6 +64,9 @@
       : p.sport === 'F1' && classifyProduct(p).sport === 'Fútbol' ? 'Fútbol' : p.sport;
     let category = p.category === 'Chaquetas' ? 'Abrigos' : p.category;
     let detail = garmentText(p.detail);
+    if(isCurrentSeason(p.season)&&/\bretro\b/i.test(detail)){
+      detail=detail.split('·').map(value=>value.trim()).filter(value=>normalize(value)!=='retro').join(' · ')||category;
+    }
     if (p.category === 'Conjuntos' || /mangas? largas?/i.test(detail)) {
       const garment = classifyProduct(p, prices);
       if (garment.jacket) {
@@ -113,13 +116,26 @@
     {key:'Camisetas',section:'categories',sport:'Por confirmar',label:'Otras camisetas sin tarifa asignada'}
   ];
   // Corte comercial fijo: se usa la temporada de la prenda, no el año actual ni el título.
+  function isCurrentSeason(season){
+    const match=String(season??'').trim().match(/^(20\d{2})(?:[/-](\d{2}|20\d{2}))?$/);
+    if(!match)return false;
+    const start=Number(match[1]);
+    const end=match[2]?.length===2?2000+Number(match[2]):Number(match[2]);
+    return start>=2025||start===2024&&end>=2025;
+  }
   function effectiveVersion(p){
+    if(p.version==='Retro'&&isCurrentSeason(p.season)){
+      return /\b(?:player (?:version|edition)|authentic)\b/.test(normalize(p.original))?'Jugador':'Estándar';
+    }
     const year=String(p.season||'').trim().match(/^((?:19|20)\d{2})(?:$|[/-]\d{2,4}$)/);
     return p.version==='Retro'||year&&Number(year[1])<=2022?'Retro':p.version;
   }
   function versionLabel(p){const version=effectiveVersion(p);return version==='Estándar'&&p.sport==='Fútbol'?'Fan / Aficionado':version;}
   function generalKey(p){
-    if(p.sport==='Fútbol'&&p.category==='Camisetas')return effectiveVersion(p)==='Retro'?'football_retro':p.version==='Jugador'?'football_player':'football_fan';
+    if(p.sport==='Fútbol'&&p.category==='Camisetas'){
+      const version=effectiveVersion(p);
+      return version==='Retro'?'football_retro':version==='Jugador'?'football_player':'football_fan';
+    }
     if(p.sport==='NBA'){
       if(p.category==='Camisetas')return 'nba_jersey';
       if(p.category==='Pantalones y shorts'&&/\bshorts?\b/.test(normalize(p.original||p.detail)))return 'nba_shorts';

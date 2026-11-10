@@ -27,7 +27,7 @@ async function load(overrides={}){
   const message=core.orderMessage(bag,map,prices,n=>'$'+n.toFixed(2),null,'https://kalojerseys.github.io/Catalogo/');
   assert(message.includes('Cantidad: 2'));assert(message.includes('2XL'));assert(message.includes('$120.00'));assert(message.includes('?producto=manual-prueba'));assert(!message.includes('yupoo.com'));
   assert.equal(new Set([...products,...loaded.products].map(p=>p.id)).size,products.length+loaded.products.length);
-  let polos=0;for(const p of products)if(core.classifyProduct(p,prices).polo){assert.equal(core.priceOf(p,prices),p.version==='Retro'||/^(19\d{2}|20(?:0\d|1\d|2[0-2]))(?:$|[/-])/.test(p.season)?40:35,p.id);polos++;}assert(polos>0);
+  let polos=0;for(const p of products)if(core.classifyProduct(p,prices).polo){assert.equal(core.priceOf(p,prices),core.effectiveVersion(p)==='Retro'?40:35,p.id);polos++;}assert(polos>0);
   const polo={id:'test-polo',sport:'F1',category:'Polos',original:'F1 polo shirt',version:'Estándar'};
   for(const sport of ['Fútbol','NBA','F1','NFL'])for(const version of ['Estándar','Jugador','Retro'])assert.equal(core.priceOf({...polo,sport,version},prices),version==='Retro'?40:35);
   for(const season of ['1999','2019','2020','2021','2022','2022/23','2022/2023']){
@@ -36,7 +36,19 @@ async function load(overrides={}){
     assert.equal(core.priceOf({...product,sport:'Fútbol',category:'Camisetas',original:'soccer jersey'},prices),40);
   }
   for(const season of ['2023','2023/24','2026','2029','Sin temporada'])assert.equal(core.priceOf({...polo,season},prices),35,season);
-  assert.equal(core.priceOf({...polo,season:'2026/27',version:'Retro'},prices),40);
+  for(const season of ['2024/25','2024/2025','2025','2025/26','2026/27']){
+    const recent={...polo,season,version:'Retro',detail:'Retro · Azul'};
+    assert.equal(core.priceOf(recent,prices),35,season);
+    assert.equal(core.displayProduct(recent).detail,'Azul');
+    const jersey={...recent,sport:'Fútbol',category:'Camisetas',original:'Soccer Retro Model Jersey'};
+    assert.equal(core.priceOf(jersey,prices),30,season);
+    const player={...jersey,original:'Soccer Retro Model Player Version Jersey'};
+    assert.equal(core.effectiveVersion(player),'Jugador',season);
+    assert.equal(core.priceOf(player,prices),35,season);
+  }
+  for(const season of ['2022/23','2023/24','2024','Sin temporada']){
+    assert.equal(core.priceOf({...polo,season,version:'Retro'},prices),40,season);
+  }
   const dated={...polo,season:'2022',id:'retro-2022'};const datedIndex=core.createIndex([dated]);
   const state={q:'',sport:'',category:'',team:'',audience:'',version:'Retro',season:'',favorites:false,sort:'new'};
   assert.equal(core.filterProducts([dated],state,prices,new Set(),datedIndex).length,1);
