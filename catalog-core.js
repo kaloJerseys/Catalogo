@@ -92,7 +92,8 @@
     {key:'football_player',sport:'Fútbol',label:'Versión Jugador'},
     {key:'football_retro',sport:'Fútbol',label:'Versión Retro'},
     {key:'football_set',sport:'Fútbol',label:'Conjunto normal / entrenamiento'},
-    {key:'football_long_sleeve_set',sport:'Fútbol',label:'Conjunto de camiseta de manga larga'},
+    {key:'football_long_sleeve_set',sport:'Fútbol',label:'Conjunto de manga larga + short'},
+    {key:'football_long_sleeve_pants_set',sport:'Fútbol',label:'Conjunto de manga larga + pantalón largo'},
     {key:'nba_jersey',sport:'NBA',label:'Suéter (jersey)'},
     {key:'nba_shorts',sport:'NBA',label:'Short'},
     {key:'nba_set',sport:'NBA',label:'Conjunto (suéter + short)'},
@@ -100,6 +101,7 @@
     {key:'nfl_base',sport:'MotorSport y NFL',label:'NFL · prendas base'},
     {key:'polo_regular',section:'garments',sport:'Polos',label:'Polo regular · 2023 en adelante'},
     {key:'polo_retro',section:'garments',sport:'Polos',label:'Polo Retro · hasta 2022 / edición Retro'},
+    {key:'mlb_button_jersey',section:'garments',sport:'Otras prendas',label:'Camiseta estilo MLB con botones'},
     {key:'long_sleeve_jersey',section:'garments',sport:'Otras prendas',label:'Camiseta de manga larga'},
     {key:'jacket',section:'garments',sport:'Otras prendas',label:'Abrigo'},
     {key:'reversible_windbreaker',section:'garments',sport:'Otras prendas',label:'Rompevientos reversible'},
@@ -167,9 +169,19 @@
     if(a.jacket&&/\breversible\b|\bdouble sided\b|\btwo sided\b/.test(normalize(p.original)))return {section:'garments',key:'reversible_windbreaker'};
     if(a.jacket)return {section:'garments',key:'jacket'};
     if(a.hoodie)return a.cotton?{section:'garments',key:'cotton_hoodie'}:{section:'pending',key:'hoodie_material'};
+    const title=normalize(p.original);
+    if(['Camisetas','Accesorios'].includes(p.category)&&!a.set&&!a.pants&&
+      /\bjerseys?\b/.test(title)&&/\b(?:mlb|baseball|button fastening|full button)\b/.test(title)){
+      return {section:'garments',key:'mlb_button_jersey'};
+    }
     if(a.longSleeve)return {section:'garments',key:'long_sleeve_jersey'};
     if(a.sport==='Fútbol'&&a.set&&!/\bcrawling\b|\bromper\b|\bonesie\b/.test(normalize(p.original))){
-      return {section:'general',key:a.longSleeveSet?'football_long_sleeve_set':'football_set'};
+      if(a.longSleeveSet){
+        const longPants=prices.productAttributes?.[p.id]?.longPants===true||
+          /\b(?:long pants|long trousers|full length pants|full length trousers|pantalones? largos?)\b/.test(title);
+        return {section:'general',key:longPants?'football_long_sleeve_pants_set':'football_long_sleeve_set'};
+      }
+      return {section:'general',key:'football_set'};
     }
     if(a.sport==='NBA'&&a.shirt)return {section:'general',key:'nba_jersey'};
     if(!a.accessory&&motorsportDiscipline({...p,sport:a.sport})==='F1')return {section:'general',key:'f1_base'};
