@@ -12,6 +12,7 @@ window.KALO_PRICES = {
     "nba_shorts": 35,
     "nba_set": 70,
     "football_set": 45,
+    "football_long_sleeve_set": 50,
     "f1_base": 45,
     "nfl_base": 50
   },

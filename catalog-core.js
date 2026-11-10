@@ -71,7 +71,8 @@
     {key:'football_fan',sport:'Fútbol',label:'Versión Fan / Aficionado'},
     {key:'football_player',sport:'Fútbol',label:'Versión Jugador'},
     {key:'football_retro',sport:'Fútbol',label:'Versión Retro'},
-    {key:'football_set',sport:'Fútbol',label:'Conjunto / entrenamiento'},
+    {key:'football_set',sport:'Fútbol',label:'Conjunto normal / entrenamiento'},
+    {key:'football_long_sleeve_set',sport:'Fútbol',label:'Conjunto de camiseta de manga larga'},
     {key:'nba_jersey',sport:'NBA',label:'Suéter (jersey)'},
     {key:'nba_shorts',sport:'NBA',label:'Short'},
     {key:'nba_set',sport:'NBA',label:'Conjunto (suéter + short)'},
@@ -122,7 +123,9 @@
     const cotton=/\bcotton\b|\balgodon\b|纯棉|棉质/.test(text+' '+material)&&!/\b(?:not|non|sin) (?:cotton|algodon)\b/.test(text+' '+material);
     const jacketSet=!accessory&&jacket&&(set||pants);
     const shirt=!accessory&&!pants&&!polo&&!jacket&&!hoodie&&!set&&(p.category==='Camisetas'||/\bjerseys?\b|\b(?:soccer|football|basketball) shirts?\b/.test(text));
-    const longSleeve=shirt&&/\blong sleeve(?:s|d)?\b|\blongsleeve(?:s|d)?\b|mangas? largas?/.test(text+' '+normalize(p.detail));
+    const hasLongSleeves=/\blong sleeve(?:s|d)?\b|\blongsleeve(?:s|d)?\b|mangas? largas?/.test(text+' '+normalize(p.detail));
+    const longSleeve=shirt&&hasLongSleeves;
+    const longSleeveSet=set&&!accessory&&hasLongSleeves;
     const casual=/\bt shirts?\b|\btees?\b|\bcasual\b|\bcrawling\b|\bromper\b|\bonesie\b/.test(text)||(/\bcotton\b/.test(text)&&!/\bjerseys?\b/.test(text));
     const jerseyEvidence=/\bjerseys?\b|\bsoccer\b|\bfootball\b|\bbasketball\b|\bplayer edition\b/.test(text)||p.teamStatus==='confirmed';
     // Facetas completas del catálogo; el título original resuelve los seis casos «Prepartido».
@@ -134,7 +137,7 @@
     const personalizable=(shirt||jerseySet)&&(verified.personalizable===true||(verified.personalizable!==false&&!casual&&jerseyEvidence&&['Fútbol','NBA','NFL'].includes(sport)));
     const trainingShirt=trainingFacet||/\btraining\b|\bpre match\b|\bprematch\b|\bwarm up\b|\bprepartido\b|\bentrenamiento\b/.test(text);
     const footballPatches=(shirt||jerseySet)&&sport==='Fútbol'&&!casual&&!trainingShirt&&verified.patches!==false;
-    return {sport,accessory,pants,polo,set,jacket,hoodie,cotton,jacketSet,shirt,longSleeve,casual,trainingSet,jerseySet,personalizable,footballPatches,garment:verified.garment||''};
+    return {sport,accessory,pants,polo,set,jacket,hoodie,cotton,jacketSet,shirt,longSleeve,longSleeveSet,casual,trainingSet,jerseySet,personalizable,footballPatches,garment:verified.garment||''};
   }
   function priceRule(p,prices={}){
     const a=classifyProduct(p,prices);
@@ -145,7 +148,9 @@
     if(a.jacket)return {section:'garments',key:'jacket'};
     if(a.hoodie)return a.cotton?{section:'garments',key:'cotton_hoodie'}:{section:'pending',key:'hoodie_material'};
     if(a.longSleeve)return {section:'garments',key:'long_sleeve_jersey'};
-    if(a.sport==='Fútbol'&&a.set&&!/\bcrawling\b|\bromper\b|\bonesie\b/.test(normalize(p.original)))return {section:'general',key:'football_set'};
+    if(a.sport==='Fútbol'&&a.set&&!/\bcrawling\b|\bromper\b|\bonesie\b/.test(normalize(p.original))){
+      return {section:'general',key:a.longSleeveSet?'football_long_sleeve_set':'football_set'};
+    }
     if(a.sport==='NBA'&&a.shirt)return {section:'general',key:'nba_jersey'};
     if(!a.accessory&&motorsportDiscipline({...p,sport:a.sport})==='F1')return {section:'general',key:'f1_base'};
     if(!a.accessory&&a.sport==='NFL')return {section:'general',key:'nfl_base'};
