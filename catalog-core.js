@@ -276,7 +276,7 @@
     const lines=['¡Hola, Kalo! Me interesan estos productos:'];
     bag.forEach((line,i)=>{const raw=products.get(line.id);if(!raw)return;const p=displayProduct(raw,prices);const options=validateOptions(p,line,prices),adjusted=quote?.lines[i],cost=adjusted?.cost||linePrice(p,line,prices);
       lines.push('',`${i+1}. ${p.name}`,p.detail,`Talla: ${line.size} · Cantidad: ${line.quantity}`,`Ref. ${p.id}`,cost.base===null?'Precio base: por confirmar':`Precio base: ${money(cost.base)} c/u`);
-      if(options.personalization)lines.push('Personalización: Sí (GRATIS)',`Nombre: ${options.personalization.name}`,`Dorsal: ${options.personalization.number}`);else lines.push('Sin personalización');
+      if(options.personalization)lines.push('Personalización: Sí',`Nombre: ${options.personalization.name}`,`Dorsal: ${options.personalization.number}`);else lines.push('Sin personalización');
       for(const patch of cost.patches)lines.push(`${patch.label}: ${money(patch.price)} por unidad`);
       lines.push(cost.unit===null?'Precio unitario: base por confirmar'+(cost.surcharge?` + ${money(cost.surcharge)} de parches`:''):`Precio unitario: ${money(cost.unit)}`+(cost.patches.length?` (base ${money(cost.base)} + parches ${money(cost.surcharge)})`:''));
       if(cost.unit!==null)lines.push(`Subtotal (${line.quantity} ${line.quantity===1?'unidad':'unidades'}): ${money(Math.round(cost.unit*100)*line.quantity/100)}`);
@@ -297,7 +297,7 @@
       if(quote.unknown)lines.push('Total del pedido: por confirmar.');
     }
     if(summary.unknown)lines.push('Hay prendas con precio por confirmar.');
-    lines.push('',deliveryPayment,deliveryEstimate,'','¿Me confirman el precio final y los detalles del pedido?');
+    lines.push('','¿Me confirman el precio final y los detalles del pedido?');
     return lines.join('\n');
   }
   return {normalize,searchQuery,motorsportDiscipline,sportSearchText,matchesSport,garmentText,displayProduct,priceOf,createIndex,filterProducts,orderSummary,generalDefinitions,generalKey,effectiveVersion,versionLabel,teamSearchText,matchesSearch,changeLineSize,productUrl,classifyProduct,priceRule,patchSeason,patchOptions,validateOptions,restoreOptions,lineKey,addLine,linePrice,orderMessage,deliveryPayment,deliveryEstimate};
