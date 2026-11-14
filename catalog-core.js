@@ -100,7 +100,7 @@
     {key:'nba_jersey',sport:'NBA',label:'Suéter (jersey)'},
     {key:'nba_shorts',sport:'NBA',label:'Short'},
     {key:'nba_set',sport:'NBA',label:'Conjunto (suéter + short)'},
-    {key:'f1_base',sport:'MotorSport y NFL',label:'F1 · prendas base'},
+    {key:'f1_base',sport:'MotorSport y NFL',label:'F1 · suéteres, jerseys y polos'},
     {key:'nfl_base',sport:'MotorSport y NFL',label:'NFL · prendas base'},
     {key:'polo_regular',section:'garments',sport:'Polos',label:'Polo regular · 2023 en adelante'},
     {key:'polo_retro',section:'garments',sport:'Polos',label:'Polo Retro · hasta 2022 / edición Retro'},
@@ -179,6 +179,7 @@
   }
   function priceRule(p,prices={}){
     const a=classifyProduct(p,prices);
+    if(!a.accessory&&!a.jacket&&!a.hoodie&&p.category!=='Sudaderas'&&motorsportDiscipline({...p,sport:a.sport})==='F1')return {section:'general',key:'f1_base'};
     if(a.garment&&Object.hasOwn(prices.garments||{},a.garment))return {section:'garments',key:a.garment};
     if(a.polo)return {section:'garments',key:effectiveVersion(p)==='Retro'?'polo_retro':'polo_regular'};
     if(a.jacketSet)return {section:'garments',key:'jacket_pants_set'};
@@ -200,7 +201,6 @@
       return {section:'general',key:'football_set'};
     }
     if(a.sport==='NBA'&&a.shirt)return {section:'general',key:'nba_jersey'};
-    if(!a.accessory&&motorsportDiscipline({...p,sport:a.sport})==='F1')return {section:'general',key:'f1_base'};
     if(!a.accessory&&a.sport==='NFL')return {section:'general',key:'nfl_base'};
     const key=generalKey({...p,sport:a.sport});
     return key?{section:'general',key}:null;
@@ -208,7 +208,7 @@
   function priceOf(product,prices){
     const rule=priceRule(product,prices);
     if(product.source!=='manual'&&!Object.hasOwn(prices.products||{},product.id)&&rule?.section==='pending')return null;
-    const n=Object.hasOwn(prices.products||{},product.id)?prices.products[product.id]:product.source==='manual'?product.manualPrice:rule&&Object.hasOwn(prices[rule.section]||{},rule.key)?prices[rule.section][rule.key]:prices.categories?.[Object.hasOwn(prices.categories||{},product.category)?product.category:product.category==='Abrigos'?'Chaquetas':product.category];
+    const n=Object.hasOwn(prices.products||{},product.id)?prices.products[product.id]:rule?.key==='f1_base'?prices.general?.f1_base:product.source==='manual'?product.manualPrice:rule&&Object.hasOwn(prices[rule.section]||{},rule.key)?prices[rule.section][rule.key]:prices.categories?.[Object.hasOwn(prices.categories||{},product.category)?product.category:product.category==='Abrigos'?'Chaquetas':product.category];
     return validPrice(n)?n:null;
   }
   function patchSeason(product){

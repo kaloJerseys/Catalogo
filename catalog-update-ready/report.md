@@ -1,418 +1,405 @@
 # Actualización del catálogo Kalo Jerseys
 
-Generado: 2026-11-05T22:53:17.737714-05:00
+Generado: 2026-11-13T20:22:50.735014-05:00
 
 | Concepto | Cantidad |
 | --- | ---: |
-| Álbumes del proveedor | 19267 |
-| Productos existentes en Kalo | 19194 |
-| Productos nuevos vendibles | 69 |
-| Productos modificados | 320 |
-| Productos sin cambios | 18874 |
+| Álbumes del proveedor | 19321 |
+| Productos existentes en Kalo | 19263 |
+| Productos nuevos vendibles | 54 |
+| Productos modificados | 322 |
+| Productos sin cambios | 18941 |
 | Productos que ya no aparecen | 0 |
 | Productos con errores | 0 |
-| Imágenes descargadas | 230 |
+| Imágenes descargadas | 216 |
 | Imágenes que no pudieron obtenerse | 0 |
-| Productos del catálogo final | 19263 |
+| Productos del catálogo final | 19317 |
 
 Las ausencias se conservan salvo eliminación explícita con copia de seguridad. Los datos manuales y data/prices.js se preservan.
 
-Cobertura: 561 páginas verificadas; 254 categorías.
+Cobertura: 562 páginas verificadas; 254 categorías.
 
 ## Nuevos
 
-- 261285835 — Spain 2026 Red And black Windbreaker Jacket S-3XL
-- 261285982 — 2026 Spain EQT Navy Blue Long Sleeve Sweatshirt S-3XL
-- 261286101 — 2026 Germany EQT Green Long Sleeve Sweatshirt S-3XL
-- 261286184 — kid kit Croatia 2026/27 Away Soccer Jersey size 16-28
-- 261286263 — kid kit Croatia 2026/27 Home Soccer Jersey size 16-28
-- 261286388 — Retro 1989 Ireland Home Green Jersey S-2XL
-- 261286529 — AS Roma 2026/27 Home Long Sleeve Soccer Jersey Size S-2XL
-- 261286592 — Olympique de Marseille 2026/27 White Training Suit Size S-2XL
-- 261286683 — Olympique de Marseille 2026/27 Dark Blue Training Suit Size S-2XL
-- 261286758 — Galatasaray 2026/27 Yellow Training Suit Size S-2XL
-- 261286878 — Galatasaray 2026/27 Red Training Suit Size S-2XL
-- 261286939 — Kid Kit Barcelona 2026/27 Home GOLF Soccer Jersey Size 16-28
-- 261287011 — Flamengo 2026/27 Champion Special Edition Black Jersey S-4XL
-- 261288539 — Flamengo 2026/27 Champion Special Edition Brown Jersey S-4XL
-- 261288591 — Stade Rennais 2026/27 Home Soccer Jersey S-4XL
-- 261288648 — Stade Rennais 2026/27 Away Soccer Jersey S-4XL
-- 261288720 — Stade Brestois 2026/27 Away soccer jersey size S-2XL
-- 261288807 — Stade Rennais 2026-27 Home kid kit Size 16-28
-- 261288879 — Benfica 2026/27 Red POLO Suit Size S-2XL
-- 261288964 — River Plate 2026/27 Red POLO Suit Size S-2XL
-- 261289018 — River Plate 2026/27 White POLO Suit Size S-2XL
-- 261289075 — Leeds United 2026/27 Black POLO Suit Size S-2XL
-- 261289141 — Leeds United 2026/27 Black And Gray POLO Suit Size S-2XL
-- 261289197 — RB Leipzig 2026/27 White Training Suit Size S-2XL
-- 261289263 — RB Leipzig 2026/27 Blue Training Suit Size S-2XL
-- 261289352 — RB Leipzig 2026/27 Red Training Suit Size S-2XL
-- 261289410 — Sevilla FC 2026/27 Red POLO Suit Size S-2XL
-- 261289480 — Sevilla FC 2026/27 Black POLO Suit Size S-2XL
-- 261289554 — Sevilla FC 2026/27 Red And orange Training Suit Size S-2XL
-- 261289620 — Sevilla FC 2026/27 black gray Pre-Match Training Suit Size S-2XL
-- 261289692 — AC Milan 2026/27 Black Training Suit Size S-2XL
-- 261289742 — AC Milan 2026/27 brown Training Suit Size S-2XL
-- 261289791 — Aston Villa 2026/27 Gray Training Suit Size S-2XL
-- 261289823 — Sunderland 2026/27 Blue Training Suit Size S-2XL
-- 261289871 — Real Betis 2026/27 Home Long Sleeve Kids kit Size16-28
-- 261326051 — Real Betis 2026/27 Away Long Sleeve Kids kit Size16-28
-- 261326176 — PSV Eindhoven 2026/27 Coen Dillen Anniversary Edition Adult Set Size S-2XL
-- 261326274 — PSV Eindhoven 2026/27 Coen Dillen Anniversary Edition Long Sleeve Adult Set Size S-2XL
-- 261326359 — PSV Eindhoven 2026/27 Coen Dillen Anniversary Edition Long Sleeve S-XXL
-- 261326487 — Kids Kit PSV Eindhoven 2026/27 Coen Dillen Anniversary Edition Size 16-28
-- 261326562 — PSV Eindhoven 2026/27 Coen Dillen Anniversary Edition Jersey S-4XL
-- 261326681 — Italy 2026/27 White POLO Jersey S-4XL
-- 261326771 — Espanyol 2026/27 Street Style Soccer Jersey Size S-4XL
-- 261326854 — AS Saint-Étienne 2026/27 Away Jersey S-4XL
-- 261326980 — AS Saint-Étienne 2026/27 Away Jersey S-4XL
-- 261327073 — AS Saint-Étienne 2026/27 Third Away Jersey S-4XL
-- 261327176 — Hajduk Split 2026/27 Away Soccer Jersey size S-2XL
-- 261327283 — Ipswich Town 2026/27 Third Away Soccer Jersey Size S-4XL
-- 261327438 — Ipswich Town 2026/27 Third Away Kids Kits 16-28
-- 261327610 — Manchester United 2026/27 Blue Training Suit Size S-2XL
-- 261327793 — Spain 2026 Beige Windbreaker Suit Size S-2XL
-- 261327887 — AJ Auxerre 2026/27 Home Soccer Jersey S-XXL
-- 261328337 — AJ Auxerre 2026/27 Away Soccer Jersey S-XXL
-- 261328458 — AJ Auxerre 2026/27 Third Away Soccer Jersey S-XXL
-- 261328574 — 2026/27 Barcelona x Golf Wang El Clasico Home Jersey Player Version S-4XL
-- 261328690 — Palermo F.C. 2026/27 Third Away Jersey S-4XL
-- 261328862 — Kids Argentina 2026 Dark BLue Training Jersey 16-28
-- 261328991 — Kid Kit Barcelona 2026/27 GOLF Blue Special Soccer Jersey Size 16-28
-- 261329112 — Hajduk Split 2026/27 Home Soccer Jersey size S-2XL
-- 261329247 — Kids kit Atletico Madrid 2026/27 Green Goalkeeper Soccer Jersey Size 16-28
-- 261638566 — Retro Portsmouth 2002/03 Home Jersey S-2XL
-- 261638948 — Retro Birmingham City 2011/12 home soccer jersey size S-2XL
-- 261639336 — Retro Belgrano 1996/97 Home Jersey S-XXL
-- 261640328 — Torino 2026/27 Third Away soccer jerseys Size S-2XL
-- 261640656 — Shakhtar Donetsk 2026/27 Home soccer jerseys Size S-2XL
-- 261640832 — Retro RC Lens 2002/03 Home Jersey S-XXL
-- 261640986 — Pumas UNAM 2026/27 Blue Special Long Sleeve Jersey Size S-2XL
-- 261641106 — Guinee 2026/27 Home Player Version Soccer Jersey Size S-XXL
-- 261641303 — Guinee 2026/27 Away Player Version Soccer Jersey Size S-XXL
+- 262841951 — RC Strasbourg Alsace 2026/27 Home Player Version soccer jersey Size S-2XL
+- 262842003 — OGC Nice 2026/27 Away Player Version Jersey S-XXL
+- 262842095 — OGC Nice 2026/27 Home Player Version Jersey S-XXL
+- 262842150 — Corinthians 2026/27 Black Special Jersey S-4XL
+- 262842199 — Corinthians 2026/27 Black Special Long Sleeve Jersey S-4XL
+- 262842259 — Club Guaraní 2026/27 123 Anniversary Jersey S-4XL
+- 262842290 — Bayern Munich × MCM × adidas 2026/27 Special Jersey S-4XL
+- 262842345 — Boca Junior 2026/27 Whie POLO Suit Size S-2XL
+- 262842383 — Boca Junior 2026/27 Blue POLO Suit Size S-2XL
+- 262842431 — Boca Junior 2026/27 Black POLO Suit Size S-2XL
+- 262842494 — Boca Junior 2026/27 White POLO Suit Size S-2XL
+- 262842630 — Athletic Club 2026/27 Lime Neon Green Training Suit Size S-2XL
+- 262842730 — Germany 2026 Tang Black Jacket S-XXL
+- 262842774 — El Salvador 2026/27 Snake Pattern Blue Jersey S-4XL
+- 262842835 — Barcelona 2026/27 & Golf Wang El Clasico Long Sleeve Soccer jersey S-4XL
+- 262842888 — 2026/27 Barcelona x Golf Wang El Clasico Home Jersey S-4XL
+- 262842958 — Germany 1994 Green Jacket Windbreaker S-XXL
+- 262843008 — Mens Real Betis 2026/27 “Iscomanía” Special Commemorative Edition Jersey Size S-4XL
+- 262843081 — SC Cambuur 2026/27 Home Adult Suit Size S-2XL
+- 262843165 — Mens SC Cambuur 2026/27 Home Jersey Size S-4XL
+- 262843215 — Mens Real Betis 2026/27 Black Sweater top size S-4XL Size S-4XL
+- 262843260 — Besiktas 2026/27 Fourth Away Soccer Jersey size S-4XL
+- 262843315 — Villarreal CF 2026/27 Yellow Special Soccer Jersey Size S-4XL
+- 262843352 — Rangers 2026/27 Fourth Away Soccer Jersey size S-4XL
+- 262843417 — Las Palmas 2026/27 Pink October Special Soccer Jersey S-4XL
+- 262843464 — SC Cambuur 2026/27 Away Adult Suit Size S-2XL
+- 262843846 — Real Madrid 2026/27 White POLO suit size S-3XL
+- 262843903 — SSC Napoli 2026/27 White Training Suit size S-2XL
+- 262843958 — SSC Napoli 2026/27 Black Training Suit size S-2XL
+- 262844029 — SSC Napoli 2026/27 Blue Training Suit size S-2XL
+- 262844114 — Retro Lazio 2000-01 away long sleeve soccer jerseys
+- 262844169 — SSC Napoli 2026/27 Blue Vest Suit size S-2XL
+- 262844220 — SSC Napoli 2026/27 White Vest Suit size S-2XL
+- 262844269 — SSC Napoli 2026/27 Black Vest Suit size S-2XL
+- 262844326 — Chivas Guadalajara CD 2026/27 Third Away Kids Kit Size 16-28
+- 262844361 — Retro 2000/01 lympique Lyon home soccer jersey size S-2XL
+- 262844501 — Retro 2011/12 lympique Lyon Away soccer jersey size S-2XL
+- 262844588 — Retro 2012/13 lympique Lyon Home soccer jersey size S-2XL
+- 262844625 — Retro 2002/03 Monterrey Home Jersey S-XXL
+- 262844684 — Barcelona 2026/27 Home Long Sleeve Adult Set Size S-2XL
+- 262844748 — Barcelona 2026/27 Third Away Long Sleeve Adult Set Size S-2XL
+- 262844797 — AC Milan 2026/27 Home Long Sleeve Adult Suit Size S-2XL
+- 262844862 — PSG 2026/27 Black And Pink Windbreaker Suit S-2XL
+- 262844902 — Marseille 2026/27 Blue Windbreaker Suit S-2XL
+- 262844991 — Marseille 2026/27 Black Windbreaker Suit S-2XL
+- 262845057 — Spain 2026 Red POLO size S-4XL
+- 262845152 — Manchester United 2026/27 Sweatshirt - Red S-4XL
+- 262845197 — Barcelona 2026/27 & Golf Wang El Clasico Black Sweater S-4XL
+- 262845250 — Real Madrid 2026/27 Black Sweater Top size S-4XL
+- 262845301 — Kids kit Atletico Madrid 2026/27 Yellow Goalkeeper Soccer Jersey Size 16-28
+- 262845342 — Celtic 2026/27 Originals Casual Player Version Jersey S-3XL
+- 262845389 — Retro Manchester United 1994/95 Red Special Edition Retro Jersey S-XXL
+- 262845429 — Retro Club Atlético Peñarol 2002/03 Home Soccer Jersey S-2XL
+- 262845490 — Mens Fenerbahce 2026/27 Navy Blue Training Suit Size S-3XL
 
 ## Modificados
 
+- 158368970 — 24-25 24-25 ACM Pleasure co-branded black edition kid kit
 - 158372233 — 205#篮球袜
-- 158376686 — 120
+- 158376777 — A1款手套-高仿-阿迪全乳胶手套
 - 158379842 — S2三杠纯棉运动袜
-- 158383560 — 泰版足球袜百搭款
+- 158384123 — 贴皮NK足球总图
 - 158392105 — DML7330#光板成人精英篮球袜
-- 158393138 — MAMBA系列 成人精英高帮篮球袜
+- 158393216 — MJM659 新款青少年幼儿任意起毛专业锦纶纯棉毛巾底足球袜
 - 158395869 — 761# S-2XL
-- 158397512 — 8004(4色)S~3XL
+- 158397608 — 8001(7色) S~3XL
 - 158399903 — 23-24 Cadiz home kid kit size 16-28
-- 158400529 — 1981 Boca Juniors home long sleeve
+- 158400550 — 23/24 Player Sporting Lisbon Third Away S-XXL
 - 158401229 — 99-00 Chivas home
-- 158401723 — 23-24 Windbreaker Americas Black
+- 158401766 — 01-02 America home
 - 158402481 — Colo-Colo 13-time champion version home
-- 158403081 — 1998 University of Chile home
+- 158403116 — 1995 Colo-Colo home long sleeve
 - 158403796 — 98 La Católica away
-- 158404108 — 2024 Palestino Deportivo Special edtion
+- 158404126 — 07-08 MNU gray goalkeeper Long Sleeve
 - 158404601 — 23-24 MCI yellow goalkeeper long sleeve jersey
-- 158404832 — Lens
+- 158404844 — 22-23 Flamengo home player version
 - 158405157 — 2022 Argentina women home
-- 158405487 — 23-24 LA Galaxy away
+- 158405498 — 23-24 Women's Colo-Colo away
 - 158405854 — 23-24 dortmund  home woman jersey
-- 158406021 — 1988 Netherlands home
+- 158406030 — 22-23 R MAD Y3 black kids kit
 - 158406312 — 2023 US home player version
-- 158406551 — INT 23/24 away player
+- 158406559 — 23-24 KIDS INT home Sizes 16-28
 - 158406815 — 2024 Mexico away blue player version jersey
-- 158407038 — 2024 Croatia home player version soccer jersey
+- 158407049 — 23-24 MNU Green Goalkeeper kid kit size 16-28
 - 158407294 — #K0009
-- 158407419 — Germany 1996 away kid kits
+- 158407426 — 23-24 INT  Joint version  kid kit
 - 158407588 — Mitchellness Magic White No. 1 McGrady Retro Mesh Short Sleeve
-- 158407798 — 篮球服L5800
+- 158407821 — 2324 baby Miami away size 9-12
 - 158408264 — 23-24 Napoli red goalkeeper jersey
-- 158408466 — 2022 Brazil Shorts White
+- 158408489 — 832#雄鹿队
 - 158408900 — #0036
-- 158409210 — 2023 Shorts Argentina Training Jersey
+- 158409221 — 23-24 Player Shorts R MAD Home
 - 158409649 — 2022 POLO Netherlands royal blue
-- 158409891 — 23-24 Sao Paulo POLO White
+- 158409910 — 23-24 POLO Corinthians White
 - 158410268 — Mali black/green
-- 158410530 — 2023 Philippine Goalkeeper Long Sleeve
+- 158410541 — 23-24 Honduras third away
 - 158411008 — L5807#4XS-7XL
-- 158411282 — 2021 Germany White Windbreaker
+- 158411300 — 2014 Germany away
 - 158411600 — 2012 Spain home
-- 158411811 — 1990 Italy home blue
+- 158411818 — 2006 Italy away white
 - 158412151 — 2023 Reversible Windbreaker Italy
-- 158412384 — 2022 F1 Formula One; Mercedes Benz #63 Polo Black
+- 158412398 — 2024 Italy away white kid kit
 - 158412598 — 2023 F1 Formula One; S-5XL
-- 158412751 — 2024 England home white jersey
+- 158412764 — 22-23 R MAD white windbreaker
 - 158412959 — 91-93 Brazil home
-- 158413076 — 2022 France Hoodie
+- 158413084 — 22-23 Windbreaker Corinthians Black
 - 158413299 — 2023 new windbreaker
-- 158413452 — Windbreaker Flamengo
+- 158413462 — 1958 Brazil home
 - 158413648 — 22-23 Women's Brazil home kids kit
-- 158413819 — 23-24 Windbreaker ASN
+- 158413831 — 2020 Argentina home
 - 158414065 — Windbreaker Adidas
-- 158414261 — 23-24 Miami Pink and Black windbreaker
+- 158414271 — 23-24 Monterey Trench Coat Reversible S-XXL
 - 158414515 — 1988 Netherlands home
-- 158414660 — 1998 Mexico home kids kit
+- 158414667 — 11-12 R MAD away retro kid kit
 - 158414892 — Captain's armband
-- 158415054 — 2002 Japan home blue
+- 158415062 — 2000 Japan home
 - 158415298 — 2024 Japan white special edtion jersey
-- 158415481 — 98-99 INT home blue
+- 158415496 — 2022 Mexico away kids kit
 - 158415716 — Cameroon white
-- 158415933 — 2024  Wales home red  soccer  jersey
+- 158415940 — 23-24 Algeria Reversible blue windbreaker
 - 158416182 — 98-99 Perugia home
-- 158416355 — 24-25 Uruguay home soccer jersey
+- 158416361 — 2024 Uruguay away white soccer jersey
 - 158416704 — 24-25 Belgium home red player version jersey
-- 158416902 — 23-24 Motagua home jersey
+- 158416915 — 04-05 R MAD home
 - 158417170 — 22-23 Saudi Al-Nassr jacket
-- 158417333 — 23-24 Al Nassr third away white woman jersey
+- 158417342 — 23-24 Al Hilal home size S-4XL
 - 158417544 — 24-25 Gamba Osaka home jersey
-- 158417687 — 11-12 ASN home UCL fonts
+- 158417698 — 2001 R MAD home long sleeve
 - 158417960 — 23-24 Miami away long sleeve kid kit
-- 158418123 — 00-01 Roma away white
+- 158418134 — 23-24 Philadelphia away  player version
 - 158418344 — 95-96 Blackburn home loog sleeve
-- 158418489 — 94-95 Rangers purple third away
+- 158418498 — Rangers white 150th Anniversary Edition
 - 158418701 — 04-05 Boca Juniors home
-- 158418856 — 22-23 River Plate home
+- 158418865 — 92-93 Cagliari home fonts
 - 158419067 — 1986 Netherlands home
-- 158419260 — 97-99 Porto home
+- 158419265 — 97-99 Porto away
 - 158419430 — 04-05 Benfica home
-- 158419568 — 23-24 Ceará away
+- 158419573 — 97-98 Ireland away
 - 158419771 — 01-02 Roma home
-- 158419918 — 1998 Jamaica away
+- 158419924 — 1998 Jamaica home
 - 158420094 — 99-00 Chivas home
-- 158420210 — 1978 TOT home
+- 158420216 — 1988 Aston Villa away
 - 158420364 — 1998 Spain home
-- 158420493 — 95-96 ACM home
+- 158420504 — 23-24 Baby Palmeiras home
 - 158420667 — 02-03 R MAD home
-- 158420795 — 02-04 ASN away
+- 158420804 — 2007 LA Galaxy home
 - 158420960 — 93-95 Bordeaux home
-- 158421080 — 23-24 Gremio home player version
+- 158421084 — 23-24 Gremio away
 - 158421216 — 23-24 POLO Corinthians Black Training Suit
-- 158421331 — 23-24 Corinthians home player version
+- 158421337 — 11-12 Corinthians third away
 - 158421481 — 1978 Argentina home long sleeve
-- 158421602 — 23-24 Vasco da Gama Tank Top White
+- 158421606 — 20-21 BAR third away
 - 158421755 — 2014 Flamengo red
-- 158421858 — 08-09 Fluminense home
+- 158421861 — 11-12 Fluminense 100th Anniversary
 - 158421993 — 22-23 International training server red
-- 158422084 — 23-24 Bahia home
+- 158422091 — 16-17 BAR home retro long sleeve jersey
 - 158422220 — #K0002
-- 158422305 — 22-23 Dortmund home
+- 158422309 — #K00033
 - 158422428 — 98-01 Bayern Munich away
-- 158422520 — #K000105
+- 158422527 — #K000107
 - 158422657 — #K000151
-- 158422737 — Borussia Mnchengladbach
+- 158422742 — #K000181
 - 158422855 — 23-24 Sampdoria away white jersey
-- 158422990 — Bryant #24 Lakers purple
+- 158422994 — Bryant #24 Lakers purple yellow
 - 158423138 — WILLIAMS#23 Los Angeles Clippers Black
-- 158423226 — SIMMONS#25 Detroit Pistons white
+- 158423230 — ROY#7 Portland Trail Blazers Beige
 - 158423349 — ACM 23/24 third away player size S-2XL
-- 158423459 — KUZMA #0 Lakers purple
+- 158423465 — KUZMA #0 Lakers black
 - 158423615 — Harden #13 Brooklyn Nets Commemorative Edition Yellow
-- 158423733 — 23-24 INT third Ninja Turtles jersey
+- 158423740 — DAVIS #3 Lakers black
 - 158423887 — ADEBAYO#13 Miami Heat V-neck blue
-- 158424002 — 01-02 Roma home
+- 158424008 — 99-00 Roma home
 - 158424122 — 2021 Irving #11 Brooklyn Nets Bonus Edition Black
-- 158424212 — 2021 MITCHELL#45 All-Star Blue
+- 158424216 — 2021 MURRAY#27 Nuggets City Edition Red
 - 158424301 — 23-24 Venezia  away kid kit size 16-28
-- 158424366 — 02-03 Maraseille home
+- 158424370 — New Hornets HAYWARO#20 Blue
 - 158424459 — 98-99 PSG home
-- 158424527 — PSG Windbreaker
+- 158424532 — 2021 AYTON#22 Suns Black
 - 158424622 — 2000 PSG away size S-XXL
-- 158424708 — 98-99 Marseille home
+- 158424713 — 98-99 Marseille away yellow
 - 158424836 — 23-24 Lille third away
-- 158424925 — Bristol City
+- 158424931 — 23-24 AFC Richmond home
 - 158425069 — 88-90 MNU away
-- 158425179 — 75th Anniversary Tatum #0 Celtics White
+- 158425187 — 75th Anniversary Walker #8 Celtics Green
 - 158425333 — 86-88 MNU home long sleeve
-- 158425446 — 2022 Season herro#14 Heat City Edition Black
+- 158425454 — 2022 season Leonard #2 Clippers City Edition Blue
 - 158425583 — 2022 Warriors City Edition Shorts Black
-- 158425669 — 2022 Season Barrett #9 Knicks Urban Edition Black NBA Jersey
+- 158425673 — 2022 Season Booker #1 Suns City Edition Black NBA Jersey
 - 158425767 — 24-25 MNU green special edition
-- 158425840 — 86-88 ASN home
+- 158425844 — 75th Anniversary Anthony #7 Los Angeles Lakers Jordan Purple NBA Jersey
 - 158425945 — 22-23 ASN Windbreaker Black
-- 158426024 — 23-24 ASN Black Goalkeeper
+- 158426027 — ASN 23/24 away kids size 16-28
 - 158426125 — 04-05 ASN home retro kid kits
-- 158426196 — 75th Anniversary Simmons #10 Brooklyn Nets City Edition Gray NBA Jersey
+- 158426201 — 2022 Cleveland Cavaliers GARLAND#10 Urban Edition Red NBA Jersey
 - 158426303 — Rookie Philadelphia 76ers Iverson #3 white NBA Jersey
-- 158426388 — 2020 KUMINGA#00 Warriors City Edition Black and Grey NBA Jersey
+- 158426391 — 2020 New Orleans Pelicans WLLIAMSIN#1 Urban Edition NBA Jersey
 - 158426513 — 23-24 MCI Reversible Windbreaker S-XXL
-- 158426599 — 1988 TOT third away
+- 158426603 — 2019 Oubre jr. #12 Charlotte Hornets Grey NBA Jersey
 - 158426713 — ALL-STAR blue 11 BRUNSON
-- 158426796 — Timberwolves Jordan Limited 5 EDWARDS
+- 158426803 — 21-22 West Ham away Commemorative Edition
 - 158426920 — 23-24 Wolves  home jersey
-- 158426992 — 23-24 Brighton Europa League Limited Edition Size S-4XL
+- 158426996 — Brighton 23/24 kids
 - 158427096 — 2024 Mexico home long sleeve soccer jersey
-- 158427177 — 11-12 R MAD away black
+- 158427183 — 12-13 R MAD third away
 - 158427343 — 2223 R MAD training suit black/purple border
-- 158427453 — 23-24 R MAD home player version
+- 158427464 — 23-24 R MAD home kids kit
 - 158427613 — 23-24 R MAD Green Goalkeeper long sleeve kit
-- 158427739 — 17-18 BAR home
+- 158427755 — 07-08 BAR home long sleeves
 - 158427955 — 23-24 BAR away player version
-- 158428353 — 2009-10 BAR home retro kid kit
+- 158428359 — 2024 New Barcelona Pre-match Server Player Edition S-XXL
 - 158813451 — NBA
-- 159876171 — 2024 Turkey away white soccer jersey
+- 159876520 — 2024 Mexico yellow goalkeeper jersey
 - 160920659 — 2024 Germany away woman jersey
-- 161379039 — 24-25 ACM x pleasures reversible windbreaker
+- 161379513 — 24-25 Norway home kid kit
 - 161810610 — 24-25 R MAD  Trench Coat Reversible
-- 163136984 — 2024 Ecuador  away soccer jersey
+- 163144473 — 1992 England home retro jersey
 - 163571525 — 2024 Croatia home kid kit
-- 163728776 — 2010 Brazil home retro jersey
+- 163766303 — 24-25 MCI yellow and black player version jersey
 - 164851648 — 2024 polo F1 Formula One S-5XL
-- 165555623 — 2024 Georgia third away soccer jersey
+- 165555937 — 24-25 PSV Eindhoven away jersey
 - 168904651 — 24-25 Bayer 04 Leverkusen home soccer jersey
-- 169163467 — 2024  Portugal  Euro Yellow Goalkeeper uniform Jersey
+- 169163645 — 24-25 MNU third away kid kit
 - 169685978 — USA  Statue of Liberty Jersey
-- 169934470 — 24-25 Lyon home player version shorts
+- 169934914 — 24-25 Marseille home player version shorts
 - 170261269 — 24-25 Monterrey home kid kit
-- 170305139 — 24-25 MCI home woman jersey
+- 170350562 — 24-25 Pumas away player version jersey
 - 170446008 — 24-25 LLL home shorts
-- 170546472 — 24-25 FC St. Pauli  Away Jersey
+- 170546517 — 24-25 BTS home kid kit
 - 171103167 — 24-25 Sunderland away soccer jersey
-- 171898570 — 24-25 R MAD third away woman size S-2XL
+- 171898734 — 24-25 INT away white player version jersey
 - 173119426 — 24-25 Granada Home Soccer Jersey
-- 173319176 — 24-25 Granada Away jersey size S-2XL
+- 173319192 — 24-25 Leverkusen Third Away Soccer Jersey
 - 173705915 — 24-25 Atlanta home soccer jersey
-- 174392160 — 24-25 ASN dark blue windbreaker suit
+- 174402236 — 24-25 CD Palestino  Pink Graffiti Jersey S-XXXXL
 - 174896097 — 24-25 Boca away kid kit
-- 175489404 — 24-25 BAR home shorts
+- 175489501 — 24-25 Roma away shorts
 - 177497195 — 2000 VENEZUELA home retro jersey
-- 178206225 — 24-25 Brazil  Special Eagle kit Jersey S-XXL
+- 178206535 — 24-25 Preston North End F.C. Away Jersey S-XXL
 - 178685144 — 24-25 Venezia Third away soccer jersey
-- 179044932 — 24-25 BAR blue and red training jersey
+- 179045025 — 24-25 Palestino Black kid kit
 - 179794504 — 24-25 Espanyol Away Jersey
-- 180311008 — 24-25 Real Zaragoza  Home Kids Kit
+- 180311747 — 00-01 Bayern Away Retro Jersey
 - 181220224 — 2024 France Blue winbreaker
-- 182482524 — 24-25 Red Windbreaker
+- 182482737 — 24-25 Leipzig Red Bull Limited Edition Red SIZE S-2XL
 - 182900275 — 2012-13 Sevilla home retro jersey
-- 183142970 — 12-13 MCI Away retro jersey
+- 183269068 — 21-22 R MAD home long sleeve jersey
 - 183495236 — 24-25 Granada special jersey
-- 183715065 — 96-97 Valencia away retro jersey
+- 183730991 — 24-25 Japan Pink Special jersey
 - 184356344 — Argentina dark blue cotton t shirt
-- 184563949 — 24-25 R MAD light pink windbreaker
+- 184564096 — Dortmund Reversible windbreaker
 - 184939522 — 24-25 ACM black and green special player version jersey
-- 185403297 — Los Angeles Lakers 2023/24 Statement Edition DONCIC#77
+- 185422694 — 25-26 Valencia white jersey
 - 186370153 — 15-16  Sevilla  home retro jersey
-- 186526631 — 25-26 Club Atlético Independiente home jersey
+- 186653766 — 2025 Jamaica black windbreaker
 - 187228584 — 2003 Colo Colo home retro jersey
-- 187243256 — 25-26 CHE home player version jersey
+- 187243510 — 25-26 CHE home jersey
 - 187523715 — 25-26 CHE Year of the Snake Limited Edition Player
-- 187613764 — 25-26 Brazil home kid kit
+- 187614084 — 94-95 PSV home retro jersey
 - 188340673 — 25-26 Flamengo pink goalkeeper jersey
-- 188678295 — 19-20 BAR home retro jersey
+- 188679562 — 25-26 Japan gray player version special edition jersey
 - 189438441 — 25-26 BAR green special player version jersey
-- 189641101 — 25-26 Al-Hilal away player version jersey
+- 189641785 — 25-26 TOT away jersey
 - 190165076 — 25-26 BAR special player version jersey
-- 190517857 — 25-26 Italy away green woman jersey
+- 190519169 — 25-26 Cameroon white player version jersey
 - 190779682 — 25-26 Ajax BOB MARLEY kid kit
-- 191374564 — 25-26 Japan Black Special Edition (ferret) Player
+- 191374671 — 2025 Japan White Special Edition Purple Monkey King Player
 - 191844050 — 25-26 R MAD white ,black and blue windbreaker
-- 192145523 — 25-26 El Salvador home soccer jersey size 16-28
+- 192146423 — 25-26 Geona 120th jersey with sponsor
 - 192554631 — 25-26 Bolivia away jersey
-- 192834952 — 98-99 BAR home kid kit
+- 192835256 — 25-26 Corinthians away player version jersey
 - 193515046 — 96-97 LLL Third Away retro jersey
-- 194195789 — 11-12 ASN away retro long sleeve jersey
+- 194196404 — 25-26 Joaquín clubs combined jersey
 - 195680923 — 25-26 PSG black and pink training suit
-- 196451737 — 25-26  Club de Cuervos Kings Home Soccer Jersey
+- 196452253 — 25-26  Persas FC Americas Kings Home soccer Jersey
 - 196777083 — 25-26 BAR home long sleeve jersey
-- 197387656 — 25-26 ASN Blue And Red training suit
+- 197388142 — 25-26 Borussia Dortmund black training suit
 - 197645866 — 25-26 CHE Blue Special Edition Player Version Jersey
-- 198309854 — 25-26 Bayern Munich  Blue Goalkeeper Kids Kit
+- 198310303 — FC Magdeburg 2024/25Anniversary Jersey
 - 199323278 — Stuttgart 2006/07 Away Retro Jersey
-- 199597802 — 02-03 A MAD  home Retro  soccer jersey size S-2XL
+- 199598208 — 01-02 Mallorca  Red retro jersey
 - 200153186 — 25-26 PSG Blue tracksuit
-- 200744777 — 25-26 St. Pauli away soccer jersey
+- 200745180 — 25-26 Deportivo de La Coruna 25th Anniversary Edition Kids Kit
 - 201545141 — 25-26 Finland home kid kit
-- 202423826 — 2025 England home long sleeve player version jersey
+- 202424375 — 25-26 Germany white training suit
 - 202485897 — 25-26 ASN Baseball jersey
-- 203001661 — 25-26 TOT home shorts
+- 203004353 — Real Madrid 2025/26 Yellow Goalkeeper Kids Kit
 - 203607818 — Dallas Mavericks 2023 White FLAGG #32
-- 204455805 — 25-26 R MAD blue and gray training suit
+- 204456150 — 25-26 Boca white baseball jersey
 - 205787238 — 25-26 Al-Nassr home player version soccer jersey
-- 206414323 — 25-26 Chelsea 25 X NFL jersey size S-2XL
+- 206418244 — 25-26 Club Leon home soccer jersey
 - 206989968 — 25-26 Portsmouth home soccer jersey
-- 208076433 — 25-26 Brazil Black Jesus Special Jersey
+- 208076575 — 25-26 Palestino special version white gold long sleeves soccer jersey
 - 208082091 — 25-26 Lille OSC  Away Player Version soccer jersey size S-2XL
-- 208907446 — 25-26 Japan モンキー・D・ルフィ special jersey
+- 209073444 — 25-26 Osasuna Home Jersey
 - 209636705 — 25-26 Nürnberg away soccer jersey
-- 209784481 — 25-26 Burkina Faso Third Away Player Version Jersey
+- 209785059 — 25-26 Sassuolo home soccer jersey
 - 210234724 — 25-26 AD Originals Jersey
-- 210362932 — 25-26 Al-Hilal Away soccer jersey
+- 210363535 — 25-26 Middlesbrough third Away Kid Kit
 - 210590014 — 2025-26 Croatia Blue and Red  windbreaker
-- 210864051 — 25-26 Paris Special Player Version Cheap Soccer Jerseys Yupoo
+- 210864341 — 2025 Colombia Home Cheap Soccer Jerseys Yupoo
 - 211452091 — Benfica 2025/26 Black And Red Special Jersey
-- 212601812 — Retro Palestino CD 2022/23 Black Long Sleeve soccer jersey size S-2XL
+- 212602524 — Bayern München 2025/26 Oktoberfest kid kit
 - 213548289 — Zenit 2025/26 away soccer jersey S-2XL
-- 214117414 — Retro Fiorentina 1992/93 home long sleeves size S-2XL
+- 214117763 — Retro Arsenal 1996/97 Home Long Sleeve soccer jerseys
 - 214471377 — Venezia 2025/26 Home Long sleeve soccer jersey With Sponsor Size S-XXL
-- 214612674 — Japan 2026 World Cup Home Player Version Jersey
+- 214613044 — 25-26 PSG Third Away Player Version Shorts
 - 215862351 — Manchester city 2025/26 Special Horse Year kids size 16-28
-- 215878176 — Retro Athletic Bilbao 1998/99 home S-XXL
+- 215993650 — Arsenal 2025-26 Colorful Player Version Training jersey size S-2XL
 - 216567592 — Brazil 2026 World Cup Away Jersey
-- 216789772 — Arsenal 2025-26 Black Training jersey size S-2XL
+- 216791643 — Vasco da Gama 2025/26 Away Soccer Jersey with all Sponsor
 - 217345743 — Retro 1998 Morocco Second Home Jersey Long Sleeve S-XXL
-- 218335320 — Spain 2026 World Cup Home long sleeve soccer jersey S-4XL
+- 218337057 — Woman Argentina 2026 World Cup Home soccer jersey size S-2XL
 - 218827509 — Retro Eintracht Frankfurt 1995/96 Home Long Sleeve Jersey S-XXL
-- 219627658 — Mens Sevilla FC 2025/26 Red Travel Polo Jersey
+- 219627965 — Portugal 2026 World Cup Away Long Sleeve player version Jersey S-4XL
 - 220280885 — 2026 Retro Model Phoenix Suns MN Jersey
-- 220362228 — Argentina 2025/26 White Training suit size S-3XL
+- 220362652 — Argentina 2026 Goalkeeper Soccer Uniform Size S-2XL
 - 220638109 — Retro 1995/96 Cannes Home Jersey Long Sleeve S-XXL
-- 221402864 — Mali 2026 Away Player Version Jersey S-XXL
+- 221403154 — France 2026 Home Rugby jersey size S-5XL
 - 221676515 — Retro Barcelona 2014/15 Away player version Jersey
-- 222173038 — Retro England 1998 Home Shorts
+- 222173337 — Retro AC Milan 2006/07 Home Shorts
 - 222767318 — Retro Bordeaux 95-96 home soccer jersey size S-XXL
-- 222913907 — Canada 2026 Black and red goalkeeper long sleeves Jersey
+- 222914248 — Morocco 2026 World Cup home jersey
 - 223196858 — Argentina 2025/26 White Vest Suit Size S-2XL
-- 223293395 — Real Madrid 2025/26 POLO - Cyan S-XXL
+- 223293527 — Jamaica 2026 World Cup Home Soccer jersey
 - 223812420 — Retro Pumas 99-00 home Soccer Jersey
-- 224648762 — 2025/26 PSG Training Dark Blue Polo S-XXL
+- 224824099 — 26/27 Barcelona
 - 225154014 — Brazil 2026 Casual Black jersey S-XXL
-- 226999777 — Universidad de Chile 2026/27 Home Kid kit
+- 227000500 — Women Chivas 2025/26 third soccer jersey size S-2XL
 - 228333467 — Tottenham 2025/26 125th Anniversary Kids Jersey
-- 228520395 — England 2026 World Cup Home Long sleeve soccer jerseys S-4XL
+- 228521210 — Fluminense 2026/27 Away kid soccer jersey size 16-28
 - 229945435 — AC Milan 2026/27 Away White Player version Jersey S-3XL
-- 230143781 — Sao Paulo 2026/27 home kids Soccer jersey
+- 230144423 — Retro Leverkusen 1999/00 home jersey size S-2XL
 - 232123974 — 2026 Brazil White Windbreaker S-3XL
-- 232628742 — Mens América de Cali 2026/27 Away Jersey
+- 232629259 — Malaga 2026/27 Black Retro Model soccer jersey S-4XL
 - 232771164 — Croatia 2018 Away Retro soccer jerseys
-- 234431346 — 1995 Mexico Jorge Campos #1 Goalkeeper Long Sleeve Jersey S-2XL
+- 234431896 — Real Sociedad 2025/26 Retro Model soccer jersey S-4XL
 - 235578838 — Retro Everton 2003/04 Home soccer jerseys
-- 235994757 — Racing Club de Avellaneda 2026/27 home soccer jersey size S-4XL
+- 235995039 — CHE 2025/26 Green Vest Suit Size S-2XL
 - 236026546 — Mens Brazil 2026 World Cup Green Goalkeeper Jersey S-4XL
-- 236312871 — Manchester united 2026/27 Second away jersey size S-4XL (Pictured Version)
+- 236313135 — Germany 2026 World Cup Away Long Sleeve player version size S-2XL
 - 237023715 — Woman Canada 2026 Home soccer jersey size S-2XL
-- 237838320 — Los Angeles Galaxy 2026/27 Home Player version jersey S-2XL
+- 237839317 — Real Madrid 2026/27 Purple Special Player Edition Jersey S-2XL
 - 239073741 — Retro Real madrid 2011/12 Home Long Sleeve kids kit
-- 239344024 — Women CÔTE D’IVOIRE 2026 World Cup away Cropped jersey size S-XXL
+- 240111558 — Chivas 2026/27 120th Anniversary soccer jersey size S-4XL
 - 240545488 — Mexico 2026 World Cup Purple Goalkeeper Long sleeve soccer jersey S-4XL
-- 240550885 — Germany 2026 Third Away Player Version Jersey S-XXL
+- 240551181 — Baby Mexico 2026 World Cup Third Away Size: 9 and 12
 - 242975798 — Ajax 2026/27 Third Away Player version Size S-XXL
-- 242984844 — Retro Spain 2002 away soccer jerseys S-2XL
+- 242985214 — Retro Spain 2010 Away kids Soccer jersey
 - 243677314 — Manchester United 2026/27 Second Away Jersey Player Version S-XXL
-- 244144757 — Iraq 2026 World Cup Away Player Version Soccer Jersey S-2XL
+- 244145413 — Manchester United 2026/27 Home White Player Version Shorts
 - 244261287 — Retro Spain 2006 Home Soccer Jersey S-2XL
-- 244576512 — Two Stars PSG Paris 2025/26 Home Kids Kit Size 16-28
+- 244576990 — 2026 Mexico x Someone Somewhere Lifestyle Jersey S-4XL
 - 245474074 — Club Atlético Peñarol 2026/27 Third Away Soccer Jersey S-4XL
-- 245701086 — Mens Olympique Marseille 2026/27 Home Jersey Size S-4XL
+- 245701508 — Real Madrid 2026/27 All Black Training Kids kit Jerseys SIZE 16-28
 - 246499244 — Barcelona 2026/27 Third Away Long Sleeve Jersey Size S-4XL
-- 246751355 — Retro Werder Bremen 2009/10 Home Jersey S-XXL
+- 246752015 — AD 2026 Blue Special Jersey Size S-4XL
 - 247946082 — 2026/27 Werder Bremen Away Jersey S-4XL
-- 249604002 — 2026 Spain Trefoil Royal Blue Special Edition Jersey Size S-4XL
+- 249604234 — 2026 Argentina Striped Number Printed Special Jersey Size S-4XL
 - 249708891 — Brighton & Hove Albion 2026/27 Away Soccer Jersey S-4XL
-- 250236540 — 2026 England Home Bellingham With Stitched Name Number Jersey S-4XL
+- 250236816 — Sporting CP Lisbon 2026/27 120th Anniversary Strike Jersey S-4XL
 - 251724294 — Tigres UANL 2025/26 Away Soccer Jersey Size S-4XL
-- 252071406 — Barcelona 2026/27 Spider Special Player Version Jersey S-2XL
+- 252071703 — Barcelona 2026/27 Red And Blue Training Soccer jersey S-4XL
 - 252303969 — Saudi Al Nassr 2026/27 Ronaldo Away size S-4XL
-- 252316771 — Chivas 2026/27 Away Player Version Shorts Size S-2XL
+- 252317265 — 2026/27 Flamengo US Pack Full-Button Baseball Jersey S-4XL
 - 252602914 — Mens Real Madrid 2026/27 Third Away Long Sleeve Jersey S-4XL
-- 252712762 — Real Madrid 2026/27 White And Green Training Kids kit Jerseys SIZE 16-28
+- 252713148 — S.C. Braga 2026/27 Home jersey S-4XL
 - 254528454 — Retro 2020/21 PSG X BALMAIN Jersey S-XXL
-- 254831895 — Atletico Madrid 2026/27 Away Vest Suit Size S-2XL
+- 254832522 — Chelsea 2026/27 Away Vest Suit Size S-2XL
 - 256451816 — Atletico Madrid 2026/27 Hoodies Size S-2XL
-- 256544012 — Mens Manchester United 2026/27 Home Adult Suit S-2XL
+- 256544298 — Marseille 2026/27 Home Adult Suit Size S-2XL
 - 257752016 — Boca Junior 2026/27 Away Baby soccer jerseys
-- 257758004 — Kids Kit Barcelona 2026/27 Gray Goalkeeper Soccer Jersey Size: 16-28
+- 257758199 — Cruz Azul 2026/27 Home Long Sleeve Player Version soccer jersey Size S-2XL
 - 258571720 — Chivas Guadalajara CD 2026/27 Home Player Version Kids Kit Size 16-28
-- 258576081 — Inter Milan 2026/27 White Training Suit size S-2XL
+- 258576262 — Manchester United 2026/27 Red Vest Suit Size S-2XL
 - 259397983 — Mens Atalanta 2026/27 Fourth Away Soccer Jersey Size S-3XL
-- 259583410 — Bayern Munich 2026/27 EQT Red Player Version Retro Jersey
+- 259761158 — Arsenal 2026/27 Dark Blue Windbreaker Jacket Size S-2XL
 - 260609463 — Kids Kit Inter Milan 2026/27 Third Away Soccer jerseys Size 16-28
-- 261155548 — PSG 2026/27 White Half zipper training clothes Kid Size 10-18
+- 261286101 — 2026 Germany EQT Green Long Sleeve Sweatshirt S-3XL
+- 261641303 — Guinee 2026/27 Away Player Version Soccer Jersey Size S-XXL
 
 ## Ausentes en el proveedor (no eliminados por defecto)
 
@@ -420,4 +407,4 @@ Ninguno.
 
 ## Portadas anteriores conservadas por resolución
 
-158407798, 170305139, 174896097, 199597802, 209636705, 210234724, 218827509, 228520395, 240550885, 252602914, 254528454, 256451816, 257752016, 258571720
+158408489, 163571525, 171103167, 178685144, 181220224, 237023715, 252071703, 252713148, 254832522, 256544298, 257758199, 258576262

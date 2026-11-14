@@ -14,7 +14,7 @@ async function load(overrides={}){
 (async()=>{
   const actual=await load();assert.equal(actual.error,null);
   for(const product of actual.products){assert.equal(core.priceOf(product,prices),Object.hasOwn(prices.products||{},product.id)?prices.products[product.id]:product.manualPrice);assert(fs.existsSync(path.join(root,product.image)));}
-  const fixture={id:'manual-prueba',name:'Chaqueta de prueba',team:'Red Bull Racing',sport:'F1',category:'Chaquetas',audience:'Adulto',version:'Retro',season:'Sin temporada',seasonStatus:'unclassified',teamStatus:'confirmed',detail:'Azul',original:'F1 jacket',description:'Prueba',manualPrice:60,sizes:['S','M','L','XL','2XL'],image:'./manual-products/manual-prueba/frente.png',source:'manual'};
+  const fixture={id:'manual-prueba',name:'Chaqueta de prueba',team:'Mercedes',sport:'MotorSport',category:'Chaquetas',audience:'Adulto',version:'Retro',season:'Sin temporada',seasonStatus:'unclassified',teamStatus:'confirmed',detail:'Azul',original:'Mercedes jacket',description:'Prueba',manualPrice:60,sizes:['S','M','L','XL','2XL'],image:'./manual-products/manual-prueba/frente.png',source:'manual'};
   const fixtureIndex={'./manual-products/index.json':{status:200,ok:true,json:async()=>({formatVersion:1,products:[fixture.id]})}};
   const fixtureFiles={...fixtureIndex,['./manual-products/'+fixture.id+'/product.json']:{status:200,ok:true,json:async()=>fixture}};
   const loadFixture=(overrides={})=>load({...fixtureFiles,...overrides});
@@ -27,9 +27,9 @@ async function load(overrides={}){
   const message=core.orderMessage(bag,map,prices,n=>'$'+n.toFixed(2),null,'https://kalojerseys.github.io/Catalogo/');
   assert(message.includes('Cantidad: 2'));assert(message.includes('2XL'));assert(message.includes('$120.00'));assert(message.includes('?producto=manual-prueba'));assert(!message.includes('yupoo.com'));
   assert.equal(new Set([...products,...loaded.products].map(p=>p.id)).size,products.length+loaded.products.length);
-  let polos=0;for(const p of products)if(core.classifyProduct(p,prices).polo){assert.equal(core.priceOf(p,prices),core.effectiveVersion(p)==='Retro'?40:35,p.id);polos++;}assert(polos>0);
-  const polo={id:'test-polo',sport:'F1',category:'Polos',original:'F1 polo shirt',version:'Estándar'};
-  for(const sport of ['Fútbol','NBA','F1','NFL'])for(const version of ['Estándar','Jugador','Retro'])assert.equal(core.priceOf({...polo,sport,version},prices),version==='Retro'?40:35);
+  let polos=0;for(const p of products)if(core.classifyProduct(p,prices).polo){assert.equal(core.priceOf(p,prices),core.motorsportDiscipline(p)==='F1'?45:core.effectiveVersion(p)==='Retro'?40:35,p.id);polos++;}assert(polos>0);
+  const polo={id:'test-polo',sport:'Fútbol',category:'Polos',original:'soccer polo shirt',version:'Estándar'};
+  for(const sport of ['Fútbol','NBA','F1','NFL'])for(const version of ['Estándar','Jugador','Retro'])assert.equal(core.priceOf({...polo,sport,version,original:sport==='F1'?'F1 polo shirt':polo.original},prices),sport==='F1'?45:version==='Retro'?40:35);
   for(const season of ['1999','2019','2020','2021','2022','2022/23','2022/2023']){
     const product={...polo,season,version:'Estándar'};
     assert.equal(core.priceOf(product,prices),40,season);assert.equal(core.effectiveVersion(product),'Retro');assert.equal(core.versionLabel(product),'Retro');
@@ -49,6 +49,12 @@ async function load(overrides={}){
   for(const season of ['2022/23','2023/24','2024','Sin temporada']){
     assert.equal(core.priceOf({...polo,season,version:'Retro'},prices),40,season);
   }
+  for(const garment of [
+    {category:'Abrigos',original:'Ferrari F1 jacket',expected:60},
+    {category:'Conjuntos',original:'Ferrari F1 jacket pants set',expected:75},
+    {category:'Sudaderas',original:'Ferrari F1 cotton hoodie',expected:55},
+    {category:'Sudaderas',original:'Ferrari F1 hoodie',expected:null}
+  ])assert.equal(core.priceOf({...polo,...garment,sport:'F1'},prices),garment.expected);
   const dated={...polo,season:'2022',id:'retro-2022'};const datedIndex=core.createIndex([dated]);
   const state={q:'',sport:'',category:'',team:'',audience:'',version:'Retro',season:'',favorites:false,sort:'new'};
   assert.equal(core.filterProducts([dated],state,prices,new Set(),datedIndex).length,1);
