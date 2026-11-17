@@ -23,6 +23,7 @@ window.KALO_PRICES = {
     "long_sleeve_jersey": 45,
     "mlb_button_jersey": 40,
     "jacket": 60,
+    "windbreaker": 65,
     "reversible_windbreaker": 65,
     "cotton_hoodie": 55,
     "jacket_pants_set": 75

@@ -107,6 +107,7 @@
     {key:'mlb_button_jersey',section:'garments',sport:'Otras prendas',label:'Camiseta estilo MLB con botones'},
     {key:'long_sleeve_jersey',section:'garments',sport:'Otras prendas',label:'Camiseta de manga larga'},
     {key:'jacket',section:'garments',sport:'Otras prendas',label:'Abrigo'},
+    {key:'windbreaker',section:'garments',sport:'Otras prendas',label:'Cortavientos'},
     {key:'reversible_windbreaker',section:'garments',sport:'Otras prendas',label:'Rompevientos reversible'},
     {key:'cotton_hoodie',section:'garments',sport:'Otras prendas',label:'Sudadera de algodón con capucha'},
     {key:'jacket_pants_set',section:'garments',sport:'Otras prendas',label:'Conjunto de abrigo + pantalón'},
@@ -184,6 +185,7 @@
     if(a.polo)return {section:'garments',key:effectiveVersion(p)==='Retro'?'polo_retro':'polo_regular'};
     if(a.jacketSet)return {section:'garments',key:'jacket_pants_set'};
     if(a.jacket&&/\breversible\b|\bdouble sided\b|\btwo sided\b/.test(normalize(p.original)))return {section:'garments',key:'reversible_windbreaker'};
+    if(a.jacket&&/\b(?:windbreakers?|winbreaker|werindbreaker|cortavientos?|rompevientos?)\b/.test(normalize(p.original+' '+p.detail)))return {section:'garments',key:'windbreaker'};
     if(a.jacket)return {section:'garments',key:'jacket'};
     if(a.hoodie)return a.cotton?{section:'garments',key:'cotton_hoodie'}:{section:'pending',key:'hoodie_material'};
     const title=normalize(p.original);
